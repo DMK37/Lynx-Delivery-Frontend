@@ -1,17 +1,13 @@
-import Paper from "@mui/material/Paper";
 import * as React from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
+
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
+import Divider from "@mui/material/Divider";
+import { ReactComponent as GoogleLogo } from "../images/GoogleLogo.svg";
+import { ReactComponent as FacebookLogo } from "../images/FacebookLogo.svg";
+import SvgIcon from "@mui/material/SvgIcon";
 
 export default function LoginPage() {
   const handleSubmit = (event) => {
@@ -24,78 +20,117 @@ export default function LoginPage() {
   };
 
   return (
-    <Box bgcolor="primary" height={500}>
-      <Paper elevation={3} sx={{ marginTop: "40px" }} color="primary.light">
-        <Container component="main" maxWidth="xs">
-          <CssBaseline />
-          <Box
-            sx={{
-              marginTop: 8,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-              <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
-              Sign in
-            </Typography>
-            <Box
-              component="form"
-              onSubmit={handleSubmit}
-              noValidate
-              sx={{ mt: 1 }}
-            >
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                autoFocus
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-              />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
-              />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Sign In
-              </Button>
-              <Grid container>
-                <Grid item xs>
-                  <Link href="#" variant="body2">
-                    Forgot password?
-                  </Link>
-                </Grid>
-                <Grid item>
-                  <Link href="#" variant="body2">
-                    {"Don't have an account? Sign Up"}
-                  </Link>
-                </Grid>
-              </Grid>
-            </Box>
-          </Box>
-        </Container>
-      </Paper>
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      display="flex"
+      flexDirection="column"
+      maxWidth={400}
+      alignItems="center"
+      justifyContent="center"
+      margin="auto"
+      marginTop={5}
+      //borderRadius={5}
+      //boxShadow={"5px 5px 10px #ccc"}
+    >
+      <Typography variant="h3" padding={2}>
+        Login
+      </Typography>
+      <TextField
+        name="email"
+        margin="normal"
+        type="email"
+        variant="outlined"
+        label="Email"
+        color="textfield"
+        required
+        sx={{ width: "90%" }}
+        InputLabelProps={{ required: false }}
+      />
+      <TextField
+        name="password"
+        margin="normal"
+        type="password"
+        variant="outlined"
+        label="Password"
+        color="textfield"
+        required
+        sx={{ width: "90%" }}
+        InputLabelProps={{ required: false }}
+      />
+      <Button
+        color="secondary"
+        sx={{
+          marginY: 3,
+          paddingX: 4,
+          ":hover": { backgroundColor: "secondary.semydark" },
+          textTransform: "none",
+        }}
+        disableElevation
+        variant="contained"
+        type="submit"
+      >
+        <Typography fontWeight="bold" color="primary.main">
+          Login
+        </Typography>
+      </Button>
+
+      <Divider
+        sx={{
+          "&::before, &::after": {
+            borderColor: "textfield.main",
+          },
+          marginTop: 3,
+        }}
+        flexItem
+      >
+        <Typography color="black">OR</Typography>
+      </Divider>
+      <Button
+        color="primary"
+        sx={{
+          marginTop: 2,
+          paddingX: 4,
+          textTransform: "none",
+          borderColor: "textfield.main",
+          ":hover": {
+            backgroundColor: "primary.dark",
+            borderColor: "textfield.main",
+          },
+          justifyContent: "flex-start",
+          width: "90%",
+        }}
+        disableElevation
+        variant="outlined"
+      >
+        <SvgIcon sx={{ marginY: 1, marginRight: 2 }}>
+          <GoogleLogo />
+        </SvgIcon>
+        <Typography color="black">Continue with Google</Typography>
+      </Button>
+
+      <Button
+        color="primary"
+        sx={{
+          marginTop: 1,
+          paddingX: 4,
+          textTransform: "none",
+          borderColor: "textfield.main",
+          ":hover": {
+            backgroundColor: "primary.dark",
+            borderColor: "textfield.main",
+          },
+          width: "90%",
+          justifyContent: "flex-start",
+        }}
+        disableElevation
+        variant="outlined"
+      >
+        <SvgIcon sx={{ marginY: 1, marginRight: 2 }}>
+          <FacebookLogo />
+        </SvgIcon>
+        <Typography color="black">Continue with Facebook</Typography>
+      </Button>
     </Box>
   );
 }

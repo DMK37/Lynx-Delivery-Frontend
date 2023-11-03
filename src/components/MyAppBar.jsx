@@ -45,7 +45,7 @@ export default function MyAppBar() {
         </Box>
         <Box sx={{ marginLeft: "auto", display: "flex" }}>
           <Link component={RouterLink} to="/signin" sx={{ paddingTop: 0.5 }}>
-            <UnderlinedTypography text="Sign In" />
+            <UnderlinedTypography text="Login" />
           </Link>
 
           <Button
@@ -63,6 +63,7 @@ export default function MyAppBar() {
               noWrap
               component="div"
               sx={{
+                textTransform: "none",
                 color: "primary.main",
                 fontSize: 15,
                 fontWeight: "bold",

@@ -21,7 +21,7 @@ export default function LoginAppBar() {
           sx={{
             fontSize: 23,
             fontWeight: "bold",
-            display: { xs: "none", sm: "block" },
+            display: "block",
             verticalAlign: "middle",
             marginRight: "15px",
             marginLeft: "5px",
