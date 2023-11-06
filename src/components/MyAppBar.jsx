@@ -9,6 +9,7 @@ import SvgIcon from "@mui/material/SvgIcon";
 import UnderlinedTypography from "./UnderlinedTypography";
 
 export default function MyAppBar() {
+  
   const pages = ["Create Inquiry"];
   return (
     <AppBar

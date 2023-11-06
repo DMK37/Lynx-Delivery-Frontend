@@ -1,6 +1,5 @@
 import * as React from "react";
 
-import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -8,6 +7,7 @@ import Divider from "@mui/material/Divider";
 import { ReactComponent as GoogleLogo } from "../images/GoogleLogo.svg";
 import { ReactComponent as FacebookLogo } from "../images/FacebookLogo.svg";
 import SvgIcon from "@mui/material/SvgIcon";
+import MyTextField from "../components/MyTextField";
 
 export default function SignUpPage() {
   const handleSubmit = (event) => {
@@ -36,63 +36,13 @@ export default function SignUpPage() {
         <Typography variant="h3" padding={2}>
           Create your account
         </Typography>
-        
-        <TextField
-          name="firstName"
-          margin="normal"
-          type="text"
-          variant="outlined"
-          label="First Name"
-          color="textfield"
-          required
-          sx={{ width: "90%" }}
-          InputLabelProps={{ required: false }}
-        />
-        <TextField
-          name="secondName"
-          margin="normal"
-          type="text"
-          variant="outlined"
-          label="Second Name"
-          color="textfield"
-          required
-          sx={{ width: "90%" }}
-          InputLabelProps={{ required: false }}
-        />
-        <TextField
-          name="address"
-          margin="normal"
-          type="text"
-          variant="outlined"
-          label="Address"
-          color="textfield"
-          required
-          sx={{ width: "90%" }}
-          InputLabelProps={{ required: false }}
-        />
+        <MyTextField name={"firstName"} type="text"  label="First Name"/>
+        <MyTextField name="secondName" type="text"  label="Second Name"/>
+        <MyTextField name="address" type="text"  label="Address"/>
+        <MyTextField name="email" type="email"  label="Email"/>
+        <MyTextField name="password" type="password"  label="Password"/>
 
-        <TextField
-          name="email"
-          margin="normal"
-          type="email"
-          variant="outlined"
-          label="Email"
-          color="textfield"
-          required
-          sx={{ width: "90%" }}
-          InputLabelProps={{ required: false }}
-        />
-        <TextField
-          name="password"
-          margin="normal"
-          type="password"
-          variant="outlined"
-          label="Password"
-          color="textfield"
-          required
-          sx={{ width: "90%" }}
-          InputLabelProps={{ required: false }}
-        />
+        
         <Button
           color="secondary"
           sx={{

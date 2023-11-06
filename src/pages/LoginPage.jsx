@@ -1,6 +1,5 @@
 import * as React from "react";
 
-import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -8,6 +7,7 @@ import Divider from "@mui/material/Divider";
 import { ReactComponent as GoogleLogo } from "../images/GoogleLogo.svg";
 import { ReactComponent as FacebookLogo } from "../images/FacebookLogo.svg";
 import SvgIcon from "@mui/material/SvgIcon";
+import MyTextField from "../components/MyTextField";
 
 export default function LoginPage() {
   const handleSubmit = (event) => {
@@ -36,28 +36,8 @@ export default function LoginPage() {
       <Typography variant="h3" padding={2}>
         Login
       </Typography>
-      <TextField
-        name="email"
-        margin="normal"
-        type="email"
-        variant="outlined"
-        label="Email"
-        color="textfield"
-        required
-        sx={{ width: "90%" }}
-        InputLabelProps={{ required: false }}
-      />
-      <TextField
-        name="password"
-        margin="normal"
-        type="password"
-        variant="outlined"
-        label="Password"
-        color="textfield"
-        required
-        sx={{ width: "90%" }}
-        InputLabelProps={{ required: false }}
-      />
+      <MyTextField name={"email"} type={"email"} label={"Email"}/>
+      <MyTextField name={"password"} type={"password"} label={"Password"}/>
       <Button
         color="secondary"
         sx={{

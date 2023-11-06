@@ -7,6 +7,7 @@ import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import { Outlet } from "react-router";
 import LoginAppBar from "./components/LoginAppBar";
+import FillAfterSignUpPage from "./pages/FillAfterSignUpPage";
 
 const theme = createTheme({
   palette: {
@@ -45,6 +46,7 @@ export default function CourierApp() {
             <Route element={<WithoutAppBar />}>
               <Route path="/signin" element={<LoginPage />} />
               <Route path="/signup" element={<SignUpPage />} />
+              <Route path="/fill-signup" element={<FillAfterSignUpPage />} />
             </Route>
           </Routes>
         </BrowserRouter>
