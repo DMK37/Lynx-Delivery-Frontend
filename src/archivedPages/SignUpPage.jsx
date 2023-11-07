@@ -19,7 +19,7 @@ export default function SignUpPage() {
     });
   };
   return (
-    <Box bgcolor="primary.main" >
+    <Box bgcolor="primary.main">
       <Box
         component="form"
         onSubmit={handleSubmit}
@@ -31,18 +31,16 @@ export default function SignUpPage() {
         margin="auto"
         textAlign={"center"}
         marginTop={5}
-       
       >
         <Typography variant="h3" padding={2}>
           Create your account
         </Typography>
-        <MyTextField name={"firstName"} type="text"  label="First Name"/>
-        <MyTextField name="secondName" type="text"  label="Second Name"/>
-        <MyTextField name="address" type="text"  label="Address"/>
-        <MyTextField name="email" type="email"  label="Email"/>
-        <MyTextField name="password" type="password"  label="Password"/>
+        <MyTextField name={"firstName"} type="text" label="First Name" />
+        <MyTextField name="secondName" type="text" label="Second Name" />
+        <MyTextField name="address" type="text" label="Address" />
+        <MyTextField name="email" type="email" label="Email" />
+        <MyTextField name="password" type="password" label="Password" />
 
-        
         <Button
           color="secondary"
           sx={{
@@ -83,7 +81,7 @@ export default function SignUpPage() {
               borderColor: "textfield.main",
             },
             justifyContent: "flex-start",
-            width: "90%"
+            width: "90%",
           }}
           disableElevation
           variant="outlined"

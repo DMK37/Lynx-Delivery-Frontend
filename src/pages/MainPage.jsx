@@ -3,8 +3,15 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import SvgIcon from "@mui/material/SvgIcon";
 import { ReactComponent as Logo } from "../images/LynxLogo.svg";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function MainPage() {
+  const { isLoading } = useAuth0();
+  
+  if (isLoading) {
+    return <div></div>;
+  }
+  
   return (
     <Box
       sx={{ flexGrow: 1 }}

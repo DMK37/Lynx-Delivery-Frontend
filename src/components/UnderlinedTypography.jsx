@@ -12,7 +12,7 @@ export default function UnderlinedTypography({text}) {
         fontWeight: "lighter",
         display: "inline",
         verticalAlign: "middle",
-        
+        textTransform:"none",
         textDecoration: "underline GrayText solid",
         marginX: "15px",
         textUnderlineOffset: 4.5,

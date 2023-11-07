@@ -1,16 +1,22 @@
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
 import { Box, Link } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { ReactComponent as Logo } from "../images/BlackLynx.svg";
 import SvgIcon from "@mui/material/SvgIcon";
 import UnderlinedTypography from "./UnderlinedTypography";
+import LoginButton from "./LoginButton";
+import SignUpButton from "./SignUpButton";
+import { useAuth0 } from "@auth0/auth0-react";
+import LogoutButton from "./LogoutButton";
 
 export default function MyAppBar() {
-  
+  const { isAuthenticated, isLoading } = useAuth0();
   const pages = ["Create Inquiry"];
+  if (isLoading) {
+    return <div></div>;
+  }
   return (
     <AppBar
       position="sticky"
@@ -45,36 +51,9 @@ export default function MyAppBar() {
           </Link>
         </Box>
         <Box sx={{ marginLeft: "auto", display: "flex" }}>
-          <Link component={RouterLink} to="/signin" sx={{ paddingTop: 0.5 }}>
-            <UnderlinedTypography text="Login" />
-          </Link>
-
-          <Button
-            component={RouterLink}
-            to="/signup"
-            sx={{
-              bgcolor: "secondary.main",
-              marginX: "15px",
-              paddingX: "15px",
-              ":hover": { bgcolor: "secondary.dark" },
-            }}
-            disableElevation
-          >
-            <Typography
-              noWrap
-              component="div"
-              sx={{
-                textTransform: "none",
-                color: "primary.main",
-                fontSize: 15,
-                fontWeight: "bold",
-                display: { sm: "block" },
-                verticalAlign: "middle",
-              }}
-            >
-              Sign Up
-            </Typography>
-          </Button>
+          {!isAuthenticated && <LoginButton />}
+          {!isAuthenticated && <SignUpButton />}
+          {isAuthenticated && <LogoutButton />}
         </Box>
       </Toolbar>
     </AppBar>
