@@ -5,18 +5,12 @@ import { Box, Link } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { ReactComponent as Logo } from "../images/BlackLynx.svg";
 import SvgIcon from "@mui/material/SvgIcon";
-import UnderlinedTypography from "./UnderlinedTypography";
-import LoginButton from "./LoginButton";
-import SignUpButton from "./SignUpButton";
-import { useAuth0 } from "@auth0/auth0-react";
-import LogoutButton from "./LogoutButton";
+import UnderlinedTypography from "./underlined-typography";
+import { NavBarButtons } from "./buttons/nav-bar-buttons";
 
 export default function MyAppBar() {
-  const { isAuthenticated, isLoading } = useAuth0();
   const pages = ["Create Inquiry"];
-  if (isLoading) {
-    return <div></div>;
-  }
+
   return (
     <AppBar
       position="sticky"
@@ -46,15 +40,11 @@ export default function MyAppBar() {
         </Typography>
 
         <Box sx={{ flexGrow: 1, display: "flex" }}>
-          <Link component={RouterLink} to="/inquiry">
+          <Link component={RouterLink} to="/create-inquiry">
             <UnderlinedTypography text={pages[0]} />
           </Link>
         </Box>
-        <Box sx={{ marginLeft: "auto", display: "flex" }}>
-          {!isAuthenticated && <LoginButton />}
-          {!isAuthenticated && <SignUpButton />}
-          {isAuthenticated && <LogoutButton />}
-        </Box>
+        <NavBarButtons/>
       </Toolbar>
     </AppBar>
   );

@@ -1,11 +1,16 @@
-import { Routes, Route, BrowserRouter } from "react-router-dom";
-import MainPage from "./pages/MainPage";
-import MyAppBar from "./components/MyAppBar";
+import { Routes, Route } from "react-router-dom";
+import MainPage from "./pages/main-page";
+import MyAppBar from "./components/my-app-bar";
 import { createTheme, ThemeProvider } from "@mui/material";
 import Box from "@mui/material/Box";
 import { Outlet } from "react-router";
-import LoginAppBar from "./components/LoginAppBar";
-import FillAfterSignUpPage from "./pages/FillAfterSignUpPage";
+import LoginAppBar from "./components/login-app-bar";
+import ProfilePage from "./pages/profile-page";
+import CreateInquiryPage from "./pages/create-inquiry-page";
+import { useAuth0 } from "@auth0/auth0-react";
+import { PageLoader } from "./components/page-loader";
+import { NotFoundPage } from "./pages/not-found-page";
+import { AuthenticationGuard } from "./auth/authentication-guard";
 
 const theme = createTheme({
   palette: {
@@ -16,16 +21,22 @@ const theme = createTheme({
     secondary: {
       main: "#f77f00",
       dark: "#000000",
-      semydark:"#b35d02"
+      semydark: "#b35d02",
     },
     third: {
       light: "#caecec",
       main: "#173C49",
+      pink: "#f8d7c6",
+      pinktext: "#ec5d2a",
     },
     textfield: {
-        main: "#9c9c9c",
-        dark: "#000000",
-      },
+      main: "#9c9c9c",
+      dark: "#000000",
+    },
+    fourth: {
+      primary: "#ec5d2a",
+      light: "#f8d7c6",
+    },
   },
   typography: {
     fontFamily: "Inter",
@@ -33,19 +44,34 @@ const theme = createTheme({
 });
 
 export default function CourierApp() {
+  const { isLoading } = useAuth0();
+
+  if (isLoading) {
+    return (
+      <Box>
+        <PageLoader />
+      </Box>
+    );
+  }
+
   return (
     <ThemeProvider theme={theme}>
-      <Box bgcolor="primary.main" sx={{ flexGrow: 1 }} height='100vh'>
-        <BrowserRouter>
-          <Routes>
-            <Route element={<WithAppBar />}>
-              <Route path="/" element={<MainPage />} />
-            </Route>
-            <Route element={<WithoutAppBar />}>
-              <Route path="/fill-signup" element={<FillAfterSignUpPage />} />
-            </Route>
-          </Routes>
-        </BrowserRouter>
+      <Box bgcolor="primary.main" sx={{ flexGrow: 1 }} height="100vh">
+        <Routes>
+          <Route element={<WithAppBar />}>
+            <Route path="/" element={<MainPage />} />
+            <Route path="/create-inquiry" element={<CreateInquiryPage />} />
+            <Route path="*" element={<NotFoundPage />} /><Route
+              path="/profile"
+              element={<AuthenticationGuard component={ProfilePage} />}
+            />
+          </Route>
+          <Route element={<WithoutAppBar />}>
+            {
+              //pages without buttons on app bar
+            }
+          </Route>
+        </Routes>
       </Box>
     </ThemeProvider>
   );
