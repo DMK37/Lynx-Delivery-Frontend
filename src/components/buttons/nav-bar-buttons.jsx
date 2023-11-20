@@ -6,7 +6,6 @@ import SignUpButton from "./sign-up-button";
 import LogoutButton from "./logout-button";
 import { Link as RouterLink } from "react-router-dom";
 import { ReactComponent as Logo } from "../../images/profile-circle.svg";
-import { ReactComponent as Logo2 } from "../../images/log-out.svg";
 import SvgIcon from "@mui/material/SvgIcon";
 
 export const NavBarButtons = () => {

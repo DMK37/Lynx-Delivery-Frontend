@@ -3,36 +3,76 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useAuth0 } from "@auth0/auth0-react";
 import MyTextField from "../components/my-text-field";
-import { updateUserInfo } from "../api/backendService";
+import { getUserInfo, updateUserInfo } from "../api/backendService";
+import { useEffect, useState } from "react";
 
 export default function ProfilePage() {
   const { getAccessTokenSilently, user } = useAuth0();
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [city, setCity] = useState("");
+  const [postalCode, setPostalCode] = useState("");
+  const [street, setStreet] = useState("");
+  const [houseNumber, setHouseNumber] = useState("");
+  const [apartmentNumber, setApartmentNumber] = useState("");
+  const [DFcity, setDFCity] = useState("");
+  const [DFpostalCode, setDFPostalCode] = useState("");
+  const [DFstreet, setDFStreet] = useState("");
+  const [DFhouseNumber, setDFHouseNumber] = useState("");
+  const [DFapartmentNumber, setDFApartmentNumber] = useState("");
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
     const userInfo = {
-      firstName: data.get("firstName"),
-      lastName: data.get("lastName"),
+      userId: "",
+      firstName: firstName,
+      lastName: lastName,
+      email: user.email,
+      companyName: "",
       address: {
-        city:  data.get("city"),
-        postalCode: data.get("postalCode"),
-        street: data.get("street"),
-        houseNumber: data.get("houseNumber"),
-        apartmentNumber: data.get("apartmentNumber")
+        city: city,
+        postalCode: postalCode,
+        street: street,
+        houseNumber: houseNumber,
+        apartmentNumber: apartmentNumber,
       },
-      sourceAddress: {
-        city:  data.get("DFcity"),
-        postalCode: data.get("DFpostalCode"),
-        street: data.get("DFstreet"),
-        houseNumber: data.get("DFhouseNumber"),
-        apartmentNumber: data.get("DFapartmentNumber")
-      }
-    }
+      defaultSourceAddress: {
+        city: DFcity,
+        postalCode: DFpostalCode,
+        street: DFstreet,
+        houseNumber: DFhouseNumber,
+        apartmentNumber: DFapartmentNumber,
+      },
+    };
     const token = await getAccessTokenSilently();
     await updateUserInfo(userInfo, token);
   };
 
-
+  useEffect(() => {
+    const setValues = async () => {
+      const token = await getAccessTokenSilently();
+      const userInfo = await getUserInfo(token);
+      if (userInfo.error == null) {
+        setFirstName(userInfo.response.data.firstName);
+        setLastName(userInfo.response.data.lastName);
+        setCity(userInfo.response.data.address.city);
+        setStreet(userInfo.response.data.address.street);
+        setPostalCode(userInfo.response.data.address.postalCode);
+        setHouseNumber(userInfo.response.data.address.houseNumber);
+        setApartmentNumber(userInfo.response.data.address.apartmentNumber);
+        setDFCity(userInfo.response.data.defaultSourceAddress.city);
+        setDFStreet(userInfo.response.data.defaultSourceAddress.street);
+        setDFPostalCode(userInfo.response.data.defaultSourceAddress.postalCode);
+        setDFHouseNumber(
+          userInfo.response.data.defaultSourceAddress.houseNumber
+        );
+        setDFApartmentNumber(
+          userInfo.response.data.defaultSourceAddress.apartmentNumber
+        );
+      }
+    };
+    setValues();
+  }, [getAccessTokenSilently, user.sub]);
 
   return (
     <Box bgcolor="primary.main">
@@ -52,13 +92,15 @@ export default function ProfilePage() {
         </Typography>
         <Box maxWidth={400} marginBottom={5}>
           <MyTextField
-            name="firstName"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
             type="text"
             label="First Name"
             isRequired={false}
           />
           <MyTextField
-            name="lastName"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
             type="text"
             label="Last Name"
             isRequired={false}
@@ -86,31 +128,36 @@ export default function ProfilePage() {
               Address
             </Typography>
             <MyTextField
-              name="city"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
               type="text"
               label="City"
               isRequired={false}
             />
             <MyTextField
-              name="postalCode"
+              value={postalCode}
+              onChange={(e) => setPostalCode(e.target.value)}
               type="text"
               label="Postal Code"
               isRequired={false}
             />
             <MyTextField
-              name="street"
+              value={street}
+              onChange={(e) => setStreet(e.target.value)}
               type="text"
               label="Street"
               isRequired={false}
             />
             <MyTextField
-              name="houseNumber"
+              value={houseNumber}
+              onChange={(e) => setHouseNumber(e.target.value)}
               type="text"
               label="House Number"
               isRequired={false}
             />
             <MyTextField
-              name="apartmentNumber"
+              value={apartmentNumber}
+              onChange={(e) => setApartmentNumber(e.target.value)}
               type="text"
               label="Apartment Number"
               isRequired={false}
@@ -129,31 +176,36 @@ export default function ProfilePage() {
               Default Source Address
             </Typography>
             <MyTextField
-              name="DFcity"
+              value={DFcity}
+              onChange={(e) => setDFCity(e.target.value)}
               type="text"
               label="City"
               isRequired={false}
             />
             <MyTextField
-              name="DFpostalCode"
+              value={DFpostalCode}
+              onChange={(e) => setDFPostalCode(e.target.value)}
               type="text"
               label="Postal Code"
               isRequired={false}
             />
             <MyTextField
-              name="DFstreet"
+              value={DFstreet}
+              onChange={(e) => setDFStreet(e.target.value)}
               type="text"
               label="Street"
               isRequired={false}
             />
             <MyTextField
-              name="DFhouseNumber"
+              value={DFhouseNumber}
+              onChange={(e) => setDFHouseNumber(e.target.value)}
               type="text"
               label="House Number"
               isRequired={false}
             />
             <MyTextField
-              name="DFapartmentNumber"
+              value={DFapartmentNumber}
+              onChange={(e) => setDFApartmentNumber(e.target.value)}
               type="text"
               label="Apartment Number"
               isRequired={false}

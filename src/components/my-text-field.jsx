@@ -1,8 +1,9 @@
 import TextField from "@mui/material/TextField";
 
-export default function MyTextField({name, type, label, isRequired}) {
+export default function MyTextField({value, type, label, isRequired, onChange}) {
     return( <TextField
-        name={name}
+        value={value}
+        onChange={onChange}
         margin="normal"
         type={type}
         variant="outlined"

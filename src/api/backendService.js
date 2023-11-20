@@ -59,35 +59,52 @@ export const createInqury = async (inquiry, accessToken) => {
 };
 
 export const getInquries = async (accessToken) => {
-    try {
-      const response = await apiClient.get(`/inquiries`, {
-        headers: {
-          "content-type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      return {
-        response,
-        error: null,
-      };
-    } catch (error) {
-      return handleError(error);
-    }
-  };
+  try {
+    const response = await apiClient.get(`/inquiries`, {
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return {
+      response,
+      error: null,
+    };
+  } catch (error) {
+    return handleError(error);
+  }
+};
 
-  export const updateUserInfo = async (info, accessToken) => {
-    try {
-      const response = await apiClient.put(`/clients/:id`, info, {
-        headers: {
-          "content-type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      return {
-        response,
-        error: null,
-      };
-    } catch (error) {
-      return handleError(error);
-    }
-  };  
+export const updateUserInfo = async (info, accessToken) => {
+  try {
+    const response = await apiClient.post(`client/user-info/`, info, {
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return {
+      response,
+      error: null,
+    };
+  } catch (error) {
+    return handleError(error);
+  }
+};
+
+export const getUserInfo = async (accessToken) => {
+  try {
+    const response = await apiClient.get(`client/user-info`, {
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return {
+      response,
+      error: null,
+    };
+  } catch (error) {
+    return handleError(error);
+  }
+};

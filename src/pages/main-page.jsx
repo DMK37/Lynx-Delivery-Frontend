@@ -7,11 +7,11 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 export default function MainPage() {
   const { isLoading } = useAuth0();
-  
+
   if (isLoading) {
     return <div></div>;
   }
-  
+
   return (
     <Box
       sx={{ flexGrow: 1 }}
@@ -24,13 +24,12 @@ export default function MainPage() {
         sx={{
           bgcolor: "primary.main",
           textAlign: "center",
-          
         }}
         alignItems="center"
-      justifyContent="center"
-      margin="auto"
+        justifyContent="center"
+        margin="auto"
       >
-        <Box sx={{ maxWidth: 'xl' }}>
+        <Box sx={{ maxWidth: "xl" }}>
           <Stack
             direction="row"
             bgcolor="third.main"
@@ -44,17 +43,17 @@ export default function MainPage() {
                 sx={{ marginTop: 10, marginX: 5, marginBottom: 5 }}
                 color="third.light"
               >
-                Your Delivery, Our Priority
+                Lynx Delivery
               </Typography>
               <Typography
                 sx={{ marginX: 5, marginBottom: 5 }}
                 variant="h5"
                 color="third.light"
               >
-                We're the delivery dream team! With a passion for convenience
-                and a commitment to quality, we're the folks who bring the world
-                to your door. From doorstep to delicious – we've got you
-                covered!
+                Lynx Delivery is your trusted partner in seamless delivery
+                solutions. With a commitment to speed and reliability, we
+                specialize in timely transportation of goods, ensuring your
+                packages reach their destination with precision.
               </Typography>
             </Stack>
 

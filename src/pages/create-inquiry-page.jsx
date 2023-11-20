@@ -1,32 +1,103 @@
-import React from 'react';
-import { useState } from 'react';
-import { Box, Typography, Stack, Button } from "@mui/material";
+import React from "react";
+import { useState, useEffect } from "react";
+import {
+  Box,
+  Typography,
+  Stack,
+  Button,
+  Checkbox,
+  FormControlLabel,
+} from "@mui/material";
 import MyTextField from "../components/my-text-field";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import { createInqury } from '../api/backendService';
+import { createInqury, getUserInfo } from "../api/backendService";
 import { useAuth0 } from "@auth0/auth0-react";
 
 export default function CreateInquiryPage() {
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
-  const [value, setValue] = useState(dayjs());
+  const [deliveryDate, setDeliveryDate] = useState(dayjs());
+  const [pickUpDate, setPickUpDate] = useState(dayjs());
+  const [height, setHeight] = useState(10);
+  const [width, setWidth] = useState(10);
+  const [length, setLength] = useState(10);
+  const [weight, setWeight] = useState(1);
+  const [Scity, setSCity] = useState("");
+  const [SpostalCode, setSPostalCode] = useState("");
+  const [Sstreet, setSStreet] = useState("");
+  const [ShouseNumber, setSHouseNumber] = useState("");
+  const [SapartmentNumber, setSApartmentNumber] = useState("");
+  const [Dcity, setDCity] = useState("");
+  const [DpostalCode, setDPostalCode] = useState("");
+  const [Dstreet, setDStreet] = useState("");
+  const [DhouseNumber, setDHouseNumber] = useState("");
+  const [DapartmentNumber, setDApartmentNumber] = useState("");
+  const [isCompany, setIsCompany] = useState(false);
+  const [atWeekend, setAtWeekend] = useState(false);
+  const [highPriority, setHighPriority] = useState(false);
   async function handleSubmit(event) {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    // console.log({
-    //   email: data.get("firstName"),
-    //   password: data.get("secondName"),
-    // });
-    // const inquiry = {
-    //   user:null,
-      
-    // }
-    const token = await getAccessTokenSilently();
-    if(isAuthenticated) console.log();
-    //createInqury({})
-  };
+    let userId = null;
+    if(isAuthenticated) {
+      userId = user.sub;
+    }
+    const inquiry = {
+      userId: userId,
+      pickUpDate: pickUpDate,
+      deliveryDate: deliveryDate,
+      package: {
+        width: width,
+        height: height,
+        length: length,
+        weight: weight,
+      },
+      sourceAddress: {
+        city: Scity,
+        postalCode: SpostalCode,
+        street: Sstreet,
+        houseNumber: ShouseNumber,
+        apartmentNumber: SapartmentNumber,
+      },
+      destinationAddress: {
+        city: Dcity,
+        postalCode: DpostalCode,
+        street: Dstreet,
+        houseNumber: DhouseNumber,
+        apartmentNumber: DapartmentNumber,
+      },
+      isCompany: isCompany,
+      highPriority: highPriority,
+      deliveryAtWeekend: atWeekend,
+    };
+    let token = null;
+    if (isAuthenticated) {
+      token = await getAccessTokenSilently();
+    }
+    createInqury(inquiry, token);
+  }
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    const setValues = async () => {
+      const token = await getAccessTokenSilently();
+      const userInfo = await getUserInfo(token);
+      if (userInfo.error == null) {
+        setSCity(userInfo.response.data.defaultSourceAddress.city);
+        setSStreet(userInfo.response.data.defaultSourceAddress.street);
+        setSPostalCode(userInfo.response.data.defaultSourceAddress.postalCode);
+        setSHouseNumber(
+          userInfo.response.data.defaultSourceAddress.houseNumber
+        );
+        setSApartmentNumber(
+          userInfo.response.data.defaultSourceAddress.apartmentNumber
+        );
+      }
+    };
+    setValues();
+  }, [getAccessTokenSilently, isAuthenticated, user?.sub]);
+
   return (
     <Box
       sx={{ flexGrow: 1 }}
@@ -44,7 +115,7 @@ export default function CreateInquiryPage() {
         justifyContent="center"
         margin="auto"
       >
-        <Box sx={{ maxWidth: "xl" }} component="form" onSubmit={handleSubmit}>
+        <Box component="form" onSubmit={handleSubmit} maxWidth={1200}>
           <Stack
             direction="column"
             bgcolor="third.pink"
@@ -78,24 +149,31 @@ export default function CreateInquiryPage() {
                   Package Information
                 </Typography>
                 <MyTextField
-                  name="height"
+                  value={height}
                   type="number"
                   label="Height"
+                  onChange={(e) => setHeight(e.target.value)}
+                  isRequired={true}
                 ></MyTextField>
                 <MyTextField
-                  name="width"
+                  value={width}
                   type="number"
                   label="Width"
+                  onChange={(e) => setWidth(e.target.value)}
                 ></MyTextField>
                 <MyTextField
-                  name="length"
+                  value={length}
                   type="number"
                   label="Length"
+                  onChange={(e) => setLength(e.target.value)}
+                  isRequired={true}
                 ></MyTextField>
                 <MyTextField
-                  name="weight"
+                  value={weight}
                   type="number"
                   label="Weight"
+                  onChange={(e) => setWeight(e.target.value)}
+                  isRequired={true}
                 ></MyTextField>
               </Box>
             </Stack>
@@ -119,30 +197,127 @@ export default function CreateInquiryPage() {
                   Delivery Information
                 </Typography>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker label="Delivery Date" value={value} onChange={(newValue) => setValue(newValue)}  disablePast/>
+                  <DatePicker
+                    label="Pickup Date"
+                    value={pickUpDate}
+                    onChange={(newValue) => setPickUpDate(newValue)}
+                    disablePast
+                  />
                 </LocalizationProvider>
-
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    label="Delivery Date"
+                    value={deliveryDate}
+                    onChange={(newValue) => setDeliveryDate(newValue)}
+                    disablePast
+                  />
+                </LocalizationProvider>
+                <Typography
+                  variant="h5"
+                  fontWeight="bold"
+                  fontSize="25px"
+                  color="third.pinktext"
+                >
+                  Source Address
+                </Typography>
                 <MyTextField
-                  name="sourceCity"
+                  value={Scity}
+                  onChange={(e) => setSCity(e.target.value)}
                   type="text"
-                  label="Source City"
-                ></MyTextField>
+                  label="City"
+                  isRequired={true}
+                />
                 <MyTextField
-                  name="sourceStreet"
+                  value={SpostalCode}
+                  onChange={(e) => setSPostalCode(e.target.value)}
                   type="text"
-                  label="Source Street"
-                ></MyTextField>
-
+                  label="Postal Code"
+                  isRequired={true}
+                />
                 <MyTextField
-                  name="destinationCity"
+                  value={Sstreet}
+                  onChange={(e) => setSStreet(e.target.value)}
                   type="text"
-                  label="Destination City"
-                ></MyTextField>
+                  label="Street"
+                  isRequired={true}
+                />
                 <MyTextField
-                  name="destinationStreet"
+                  value={ShouseNumber}
+                  onChange={(e) => setSHouseNumber(e.target.value)}
                   type="text"
-                  label="Destination Street"
-                ></MyTextField>
+                  label="House Number"
+                  isRequired={true}
+                />
+                <MyTextField
+                  value={SapartmentNumber}
+                  onChange={(e) => setSApartmentNumber(e.target.value)}
+                  type="text"
+                  label="Apartment Number"
+                  isRequired={true}
+                />
+                <Typography
+                  variant="h5"
+                  fontWeight="bold"
+                  fontSize="25px"
+                  color="third.pinktext"
+                >
+                  Destination Address
+                </Typography>
+                <MyTextField
+                  value={Dcity}
+                  onChange={(e) => setDCity(e.target.value)}
+                  type="text"
+                  label="City"
+                  isRequired={true}
+                />
+                <MyTextField
+                  value={DpostalCode}
+                  onChange={(e) => setDPostalCode(e.target.value)}
+                  type="text"
+                  label="Postal Code"
+                  isRequired={true}
+                />
+                <MyTextField
+                  value={Dstreet}
+                  onChange={(e) => setDStreet(e.target.value)}
+                  type="text"
+                  label="Street"
+                  isRequired={true}
+                />
+                <MyTextField
+                  value={DhouseNumber}
+                  onChange={(e) => setDHouseNumber(e.target.value)}
+                  type="text"
+                  label="House Number"
+                  isRequired={true}
+                />
+                <MyTextField
+                  value={DapartmentNumber}
+                  onChange={(e) => setDApartmentNumber(e.target.value)}
+                  type="text"
+                  label="Apartment Number"
+                  isRequired={true}
+                />
+                <Box>
+                  <FormControlLabel
+                    checked={isCompany}
+                    onChange={e => setIsCompany(e.target.checked)}
+                    control={<Checkbox  />}
+                    label="Is Company"
+                  />
+                  <FormControlLabel
+                    checked={highPriority}
+                    onChange={e => setHighPriority(e.target.checked)}
+                    control={<Checkbox  />}
+                    label="High Priority"
+                  />
+                  <FormControlLabel
+                    checked={atWeekend}
+                    onChange={e => setAtWeekend(e.target.checked)}
+                    control={<Checkbox  />}
+                    label="Delivery at the weekend"
+                  />
+                </Box>
               </Box>
             </Stack>
             <Stack
