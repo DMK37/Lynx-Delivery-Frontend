@@ -11,6 +11,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { PageLoader } from "./components/page-loader";
 import { NotFoundPage } from "./pages/not-found-page";
 import { AuthenticationGuard } from "./auth/authentication-guard";
+import UserInquiriesPage from "./pages/user-inquiries-page";
 
 const theme = createTheme({
   palette: {
@@ -40,6 +41,7 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: "Inter",
+    fontSize: 15
   },
 });
 
@@ -61,10 +63,15 @@ export default function CourierApp() {
           <Route element={<WithAppBar />}>
             <Route path="/" element={<MainPage />} />
             <Route path="/create-inquiry" element={<CreateInquiryPage />} />
-            <Route path="*" element={<NotFoundPage />} /><Route
+            <Route
               path="/profile"
               element={<AuthenticationGuard component={ProfilePage} />}
             />
+            <Route
+              path="/inquiries"
+              element={<AuthenticationGuard component={UserInquiriesPage} />}
+            />
+            <Route path="*" element={<NotFoundPage />} />
           </Route>
           <Route element={<WithoutAppBar />}>
             {

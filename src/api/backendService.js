@@ -60,7 +60,7 @@ export const createInqury = async (inquiry, accessToken) => {
 
 export const getInquries = async (accessToken) => {
   try {
-    const response = await apiClient.get(`/inquiries`, {
+    const response = await apiClient.get(`client/inquiries`, {
       headers: {
         "content-type": "application/json",
         Authorization: `Bearer ${accessToken}`,

@@ -1,9 +1,8 @@
 import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
-import SvgIcon from "@mui/material/SvgIcon";
 import { ReactComponent as Logo } from "../images/LynxLogo.svg";
 import { useAuth0 } from "@auth0/auth0-react";
+import InquiriesTable from "../components/inquiries-table";
 
 function createData(id, parcel, sourceAddress, destinationAddress, dateOfInquiring, Status, OfferLink) {
     return {
@@ -23,7 +22,7 @@ function createData(id, parcel, sourceAddress, destinationAddress, dateOfInquiri
     // createData(...)
   ]
 
-export default function MainPage() {
+export default function UserInquiriesPage() {
   const { isLoading } = useAuth0();
 
   if (isLoading) {
@@ -37,7 +36,7 @@ export default function MainPage() {
       justifyContent="center"
       margin="auto"
     >
-      
+      <InquiriesTable/>
     </Box>
   );
 }
