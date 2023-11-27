@@ -1,18 +1,18 @@
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { Box, Link } from "@mui/material";
+import { Box, Link, Slide } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { ReactComponent as Logo } from "../images/BlackLynx.svg";
 import SvgIcon from "@mui/material/SvgIcon";
 import UnderlinedTypography from "./underlined-typography";
 import { NavBarButtons } from "./buttons/nav-bar-buttons";
 import useScrollTrigger from "@mui/material/useScrollTrigger";
-import Slide from "@mui/material/Slide";
 
 export default function MyAppBar() {
   const pages = ["Create Inquiry"];
   const trigger = useScrollTrigger();
+
   return (
     <>
       <Slide appear={false} direction="down" in={!trigger}>

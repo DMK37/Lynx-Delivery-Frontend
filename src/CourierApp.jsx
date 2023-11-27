@@ -12,6 +12,7 @@ import { PageLoader } from "./components/page-loader";
 import { NotFoundPage } from "./pages/not-found-page";
 import { AuthenticationGuard } from "./auth/authentication-guard";
 import UserInquiriesPage from "./pages/user-inquiries-page";
+import OffersPage from "./pages/offers-page";
 
 const theme = createTheme({
   palette: {
@@ -29,6 +30,7 @@ const theme = createTheme({
       main: "#173C49",
       pink: "#f8d7c6",
       pinktext: "#ec5d2a",
+      semydark: "#3c8794"
     },
     textfield: {
       main: "#9c9c9c",
@@ -63,6 +65,7 @@ export default function CourierApp() {
           <Route element={<WithAppBar />}>
             <Route path="/" element={<MainPage />} />
             <Route path="/create-inquiry" element={<CreateInquiryPage />} />
+            <Route path="/:id/offers" element={<OffersPage />} />
             <Route
               path="/profile"
               element={<AuthenticationGuard component={ProfilePage} />}

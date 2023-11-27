@@ -1,6 +1,4 @@
-import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
-import { ReactComponent as Logo } from "../images/LynxLogo.svg";
 import { useAuth0 } from "@auth0/auth0-react";
 import InquiriesTable from "../components/inquiries-table";
 
@@ -15,7 +13,7 @@ function createData(id, parcel, sourceAddress, destinationAddress, dateOfInquiri
       OfferLink
     };
   }
-
+  
   const rows = [
     // createData(...)
     // createData(...)
@@ -35,6 +33,7 @@ export default function UserInquiriesPage() {
       alignItems="center"
       justifyContent="center"
       margin="auto"
+      maxWidth="xl"
     >
       <InquiriesTable/>
     </Box>
