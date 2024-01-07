@@ -58,9 +58,43 @@ export const createInqury = async (inquiry, accessToken) => {
   }
 };
 
+export const getAllInquries = async (accessToken) => {
+  try {
+    const response = await apiClient.get(`inquiries`, {
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return {
+      response,
+      error: null,
+    };
+  } catch (error) {
+    return handleError(error);
+  }
+};
+
 export const getInquries = async (accessToken) => {
   try {
     const response = await apiClient.get(`client/inquiries`, {
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return {
+      response,
+      error: null,
+    };
+  } catch (error) {
+    return handleError(error);
+  }
+};
+
+export const getAllOffers = async (accessToken) => {
+  try {
+    const response = await apiClient.get(`offers`, {
       headers: {
         "content-type": "application/json",
         Authorization: `Bearer ${accessToken}`,
@@ -100,6 +134,29 @@ export const getUserInfo = async (accessToken) => {
         Authorization: `Bearer ${accessToken}`,
       },
     });
+    return {
+      response,
+      error: null,
+    };
+  } catch (error) {
+    return handleError(error);
+  }
+};
+
+export const createOffers = async (inquiryId, accessToken) => {
+  try {
+    const response = await apiClient.post(
+      `offers/getAll`,
+      {
+        inquiryID: inquiryId,
+      },
+      {
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
     return {
       response,
       error: null,

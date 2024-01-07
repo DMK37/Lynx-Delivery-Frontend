@@ -1,51 +1,95 @@
 import * as React from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { useEffect, useState } from "react";
-import { useAuth0 } from "@auth0/auth0-react";
-import { getInquries } from "../api/backendService";
+import { Button, Typography } from "@mui/material";
 
-export default function InquiriesTable() {
-  const { getAccessTokenSilently, user } = useAuth0();
-  const [rows, setRows] = useState([]);
-
+export default function InquiriesTable({ rows }) {
   const columns = [
-    { field: "id", headerName: "Id", width: 150 },
-    { field: "package", headerName: "Package", width: 150 },
-    { field: "sourceAddress", headerName: "Source Address", width: 200 },
+    {
+      field: "id",
+      headerName: "Id",
+      width: 150,
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "package",
+      headerName: "Package",
+      width: 150,
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "sourceAddress",
+      headerName: "Source Address",
+      width: 200,
+      align: "center",
+      headerAlign: "center",
+    },
     {
       field: "destinationAddress",
       headerName: "Destination Address",
       width: 200,
+      align: "center",
+      headerAlign: "center",
     },
-    { field: "highPriority", headerName: "High Priority", width: 200 },
+    {
+      field: "highPriority",
+      headerName: "High Priority",
+      width: 200,
+      align: "center",
+      headerAlign: "center",
+    },
     {
       field: "deliveryAtWeekend",
       headerName: "Delivery At Weekend",
       width: 200,
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "orderDetails",
+      headerName: "Order Details",
+      sortable: false,
+      width: 250,
+      align: "center",
+      disableClickEventBubbling: true,
+      headerAlign: "center",
+      renderCell: (params) => {
+        const onClick = () => {
+          console.log(params);
+          // const api = params.api;
+          // const fields = api
+          //   .getAllColumns()
+          //   .map((c) => c.field)
+          //   .filter((c) => c !== "__check__" && !!c);
+          // const thisRow = {};
+          // fields.forEach((f) => {
+          //   thisRow[f] = params.getValue(params.id, f);
+          // });
+          // return alert(JSON.stringify(thisRow, null, 2));
+        };
+
+        return (
+          <Button
+            sx={{
+              bgcolor: "secondary.main",
+              marginX: "15px",
+              paddingX: "15px",
+              ":hover": { bgcolor: "secondary.dark" },
+            }}
+            disableElevation
+            onClick={onClick}
+          >
+            <Typography>Order Details</Typography>
+          </Button>
+        );
+      },
     },
   ];
 
-  useEffect(() => {
-    const setValues = async () => {
-      const token = await getAccessTokenSilently();
-      const inquiries = await getInquries(token);
-      if (inquiries.error == null) {
-        inquiries.response.data.map((i) => {
-          i.package =
-            i.package.height + "x" + i.package.width + "x" + i.package.length;
-          i.sourceAddress = i.sourceAddress.city;
-          i.destinationAddress = i.destinationAddress.city;
-          return i;
-        });
-        setRows(inquiries.response.data);
-      }
-    };
-    setValues();
-  }, [getAccessTokenSilently, user.sub]);
-
   return (
-    <div style={{ width: "100%", marginTop:'20px'}}>
-      <DataGrid rows={rows} columns={columns} sx={{borderRadius: 5}} />
+    <div style={{ width: "100%", marginTop: "20px" }}>
+      <DataGrid rows={rows} columns={columns} sx={{ borderRadius: 5 }} />
     </div>
   );
 }

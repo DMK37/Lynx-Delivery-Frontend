@@ -1,17 +1,16 @@
-import Box from "@mui/material/Box";
-import { useAuth0 } from "@auth0/auth0-react";
+import { Box, Typography } from "@mui/material";
 import InquiriesTable from "../components/inquiries-table";
 import { useEffect, useState } from "react";
-import { getInquries } from "../api/backendService";
+import { getAllInquries } from "../api/backendService";
+import { useAuth0 } from "@auth0/auth0-react";
 
-export default function UserInquiriesPage() {
-  const { isLoading } = useAuth0();
-  const { getAccessTokenSilently, user } = useAuth0();
+export default function AllInquiriesPage() {
   const [rows, setRows] = useState([]);
+  const { getAccessTokenSilently } = useAuth0();
   useEffect(() => {
     const setValues = async () => {
       const token = await getAccessTokenSilently();
-      const inquiries = await getInquries(token);
+      const inquiries = await getAllInquries(token);
       if (inquiries.error == null) {
         inquiries.response.data.map((i) => {
           i.package =
@@ -24,11 +23,7 @@ export default function UserInquiriesPage() {
       }
     };
     setValues();
-  }, [getAccessTokenSilently, user.sub]);
-
-  if (isLoading) {
-    return <div></div>;
-  }
+  },[getAccessTokenSilently]);
 
   return (
     <Box
@@ -38,6 +33,9 @@ export default function UserInquiriesPage() {
       margin="auto"
       maxWidth="xl"
     >
+      <Typography textAlign={"center"} variant="h4" sx={{ margin: "20px" }}>
+        All Inquiries
+      </Typography>
       <InquiriesTable rows={rows} />
     </Box>
   );

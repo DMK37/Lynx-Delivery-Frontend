@@ -8,10 +8,26 @@ import SvgIcon from "@mui/material/SvgIcon";
 import UnderlinedTypography from "./underlined-typography";
 import { NavBarButtons } from "./buttons/nav-bar-buttons";
 import useScrollTrigger from "@mui/material/useScrollTrigger";
+import { useAuth0 } from "@auth0/auth0-react";
+import { jwtDecode } from "jwt-decode";
+import { useEffect, useState } from "react";
+import { OfficeBarButtons } from "./buttons/office-bar-buttons";
 
 export default function MyAppBar() {
   const pages = ["Create Inquiry"];
+  const { getAccessTokenSilently, isAuthenticated } = useAuth0();
   const trigger = useScrollTrigger();
+
+  const [jwt, setJwt] = useState([]);
+
+  useEffect(() => {
+    const getPermissions = async () => {
+      if(!isAuthenticated) return;
+      const token = await getAccessTokenSilently();
+      setJwt(jwtDecode(token).permissions);
+    };
+    getPermissions();
+  }, [getAccessTokenSilently, isAuthenticated]);
 
   return (
     <>
@@ -52,7 +68,9 @@ export default function MyAppBar() {
                 <UnderlinedTypography text={pages[0]} />
               </Link>
             </Box>
-            <NavBarButtons />
+
+            {!jwt.includes("read:all-pending-offers") && <NavBarButtons />}
+            {jwt.includes("read:all-pending-offers") && <OfficeBarButtons />}
           </Toolbar>
         </AppBar>
       </Slide>

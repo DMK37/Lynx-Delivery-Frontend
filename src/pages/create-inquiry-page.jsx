@@ -13,12 +13,13 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import { createInqury, getUserInfo } from "../api/backendService";
+import { createInqury, createOffers, getUserInfo } from "../api/backendService";
 import { useAuth0 } from "@auth0/auth0-react";
-import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
 
 export default function CreateInquiryPage() {
+  const navigate = useNavigate();
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
   const [deliveryDate, setDeliveryDate] = useState(dayjs());
   const [pickUpDate, setPickUpDate] = useState(dayjs());
@@ -76,17 +77,20 @@ export default function CreateInquiryPage() {
     let token = null;
     if (isAuthenticated) {
       token = await getAccessTokenSilently();
-      
     }
-    createInqury(inquiry, token);
+    const inq = await createInqury(inquiry, token);
+    const offers = await createOffers(inq.response.data.id, token);
+    navigate(`/${inq.response.data.id}/offers`);
+    console.log(inq.response);
+    console.log(offers.response.data);
   }
 
   useEffect(() => {
     if (!isAuthenticated) return;
     const setValues = async () => {
       const token = await getAccessTokenSilently();
-      const decoded = jwtDecode(token);
-      console.log(decoded);
+      // const decoded = jwtDecode(token);
+      // console.log(decoded);
       const userInfo = await getUserInfo(token);
       if (userInfo.error == null) {
         setSCity(userInfo.response.data.defaultSourceAddress.city);

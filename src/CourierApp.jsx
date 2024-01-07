@@ -13,6 +13,8 @@ import { NotFoundPage } from "./pages/not-found-page";
 import { AuthenticationGuard } from "./auth/authentication-guard";
 import UserInquiriesPage from "./pages/user-inquiries-page";
 import OffersPage from "./pages/offers-page";
+import AllInquiriesPage from "./pages/all-inquiries-page";
+import AllOffersPage from "./pages/all-offers-page";
 
 const theme = createTheme({
   palette: {
@@ -60,12 +62,13 @@ export default function CourierApp() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box bgcolor="primary.main" sx={{ flexGrow: 1 }} height="100vh">
+      <Box bgcolor="primary.main" sx={{ flexGrow: 1 }} minHeight= '100vh'>
         <Routes>
           <Route element={<WithAppBar />}>
             <Route path="/" element={<MainPage />} />
             <Route path="/create-inquiry" element={<CreateInquiryPage />} />
-            <Route path="/:id/offers" element={<OffersPage />} />
+            <Route
+             path="/:id/offers" element={<OffersPage />} />
             <Route
               path="/profile"
               element={<AuthenticationGuard component={ProfilePage} />}
@@ -73,6 +76,14 @@ export default function CourierApp() {
             <Route
               path="/inquiries"
               element={<AuthenticationGuard component={UserInquiriesPage} />}
+            />
+            <Route
+              path="/all-inquiries"
+              element={<AuthenticationGuard component={AllInquiriesPage} />}
+            />
+            <Route
+              path="/all-offers"
+              element={<AuthenticationGuard component={AllOffersPage} />}
             />
             <Route path="*" element={<NotFoundPage />} />
           </Route>
