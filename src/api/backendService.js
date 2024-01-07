@@ -58,6 +58,23 @@ export const createInqury = async (inquiry, accessToken) => {
   }
 };
 
+export const getInquiryById = async (inquiryId, accessToken) => {
+  try {
+    const response = await apiClient.get(`inquiries/${inquiryId}`, {
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return {
+      response,
+      error: null,
+    };
+  } catch (error) {
+    return handleError(error);
+  }
+};
+
 export const getAllInquries = async (accessToken) => {
   try {
     const response = await apiClient.get(`inquiries`, {

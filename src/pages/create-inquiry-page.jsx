@@ -13,10 +13,9 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import { createInqury, createOffers, getUserInfo } from "../api/backendService";
+import { createInqury, getUserInfo } from "../api/backendService";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
-
 
 export default function CreateInquiryPage() {
   const navigate = useNavigate();
@@ -79,10 +78,8 @@ export default function CreateInquiryPage() {
       token = await getAccessTokenSilently();
     }
     const inq = await createInqury(inquiry, token);
-    const offers = await createOffers(inq.response.data.id, token);
+    //const offers = await createOffers(inq.response.data.id, token);
     navigate(`/${inq.response.data.id}/offers`);
-    console.log(inq.response);
-    console.log(offers.response.data);
   }
 
   useEffect(() => {
