@@ -75,6 +75,71 @@ export const getInquiryById = async (inquiryId, accessToken) => {
   }
 };
 
+
+export const getPendingOffers = async (accessToken) => {
+  try {
+    const response = await apiClient.get(`offers/pending`, {
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return {
+      response,
+      error: null,
+    };
+  } catch (error) {
+    return handleError(error);
+  }
+};
+
+export const postSelectedOffer = async (offerId, customerInfo, accessToken) => {
+  try {
+    const response = await apiClient.post(
+      `offers/${offerId}/select`,
+      {
+        offerId: offerId,
+        customerInfo: customerInfo,
+      },
+      {
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return {
+      response,
+      error: null,
+    };
+  } catch (error) {
+    return handleError(error);
+  }
+};
+
+export const createOrder = async (offerId, accessToken) => {
+  try {
+    const response = await apiClient.post(
+      `orders`,
+      {
+        offerId: offerId,
+      },
+      {
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return {
+      response,
+      error: null,
+    };
+  } catch (error) {
+    return handleError(error);
+  }
+};
+
 export const getAllInquries = async (accessToken) => {
   try {
     const response = await apiClient.get(`inquiries`, {

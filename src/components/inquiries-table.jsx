@@ -1,6 +1,6 @@
 import * as React from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Button, Typography } from "@mui/material";
+import { Box, Button, Checkbox, Typography } from "@mui/material";
 
 export default function InquiriesTable({ rows }) {
   const columns = [
@@ -38,6 +38,16 @@ export default function InquiriesTable({ rows }) {
       width: 200,
       align: "center",
       headerAlign: "center",
+      renderCell: (params) => (
+        <Checkbox
+          checked={params.row.highPriority}
+          color="secondary"
+          disable
+          inputProps={{
+            'aria-label': 'High Priority',
+          }}
+        />
+      ),
     },
     {
       field: "deliveryAtWeekend",
@@ -45,6 +55,16 @@ export default function InquiriesTable({ rows }) {
       width: 200,
       align: "center",
       headerAlign: "center",
+      renderCell: (params) => (
+        <Checkbox
+          checked={params.row.deliveryAtWeekend}
+          color="secondary"
+          disable
+          inputProps={{
+            'aria-label': 'Delivery At Weekend',
+          }}
+        />
+      ),
     },
     {
       field: "orderDetails",
@@ -88,8 +108,8 @@ export default function InquiriesTable({ rows }) {
   ];
 
   return (
-    <div style={{ width: "100%", marginTop: "20px" }}>
+    <Box margin={5}>
       <DataGrid rows={rows} columns={columns} sx={{ borderRadius: 5 }} />
-    </div>
+    </Box>
   );
 }

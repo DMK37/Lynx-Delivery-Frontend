@@ -1,12 +1,19 @@
-import { Typography, Button } from "@mui/material";
+import {
+  Typography,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+} from "@mui/material";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import SvgIcon from "@mui/material/SvgIcon";
 import { ReactComponent as Logo } from "../images/BlackLynx.svg";
-import Modal from "@mui/material/Modal";
 import { useEffect, useState } from "react";
 import MyTextField from "../components/my-text-field";
-import { createOffers } from "../api/backendService";
+import { createOffers, getUserInfo, postSelectedOffer } from "../api/backendService";
 import { useParams } from "react-router";
 import { useAuth0 } from "@auth0/auth0-react";
 
@@ -21,7 +28,7 @@ export default function OffersPage() {
     const crtOffers = async () => {
       const token = await getAccessTokenSilently();
       const offers = await createOffers(params.id, token);
-      console.log(offers);
+      //console.log(offers);
       setOffer(offers.response.data);
       localStorage.setItem("offers", JSON.stringify(offers.response.data));
     };
@@ -114,45 +121,160 @@ export default function OffersPage() {
                 Pick Offer
               </Typography>
             </Button>
-            <Modal open={open} onClose={handleClose}>
-              <Box
-                sx={{
-                  position: "absolute",
-                  top: "40%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                  width: 400,
-                  bgcolor: "background.paper",
-                  border: "2px solid #000",
-                  boxShadow: 24,
-                  p: 4,
-                  borderRadius: "30px",
-                }}
-              >
-                <Typography id="modal-title" variant="h6" component="h2">
-                  Offer Details
-                </Typography>
-
-                <MyTextField
-                  type="text"
-                  label="First Name"
-                  isRequired={true}
-                ></MyTextField>
-                <MyTextField
-                  type="text"
-                  label="Last Name"
-                  isRequired={true}
-                ></MyTextField>
-                <MyTextField
-                  type="text"
-                  label="Email"
-                  isRequired={true}
-                ></MyTextField>
-              </Box>
-            </Modal>
+            <OfferDetails open={open} handleClose={handleClose} offerId={offer?.id} />
           </Stack>
         </Box>
       </Stack>
+    </Box>
+  );
+}
+
+function OfferDetails({ open, handleClose, offerId }) {
+  const [city, setCity] = useState("");
+  const [postalCode, setPostalCode] = useState("");
+  const [street, setStreet] = useState("");
+  const [houseNumber, setHouseNumber] = useState("");
+  const [apartmentNumber, setApartmentNumber] = useState("");
+  const { getAccessTokenSilently } = useAuth0();
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const token = await getAccessTokenSilently();
+      const response = await getUserInfo(token);
+
+      if (response.error) {
+        console.error(response.error);
+        return;
+      }
+      const userInfo = response.response.data;
+      setCity(userInfo.address.city);
+      setPostalCode(userInfo.address.postalCode);
+      setStreet(userInfo.address.street);
+      setHouseNumber(userInfo.address.houseNumber);
+      setApartmentNumber(userInfo.address.apartmentNumber);
+      setFirstName(userInfo.firstName);
+      setLastName(userInfo.lastName);
+      setEmail(userInfo.email);
+    };
+
+    fetchUserInfo(); // Call the function
+  }, [getAccessTokenSilently]);
+  async function handleSubmit() {
+    console.log("submit");
+    //event.preventDefault();
+    const address = {
+      city: city,
+      postalCode: postalCode,
+      street: street,
+      houseNumber: houseNumber,
+      apartmentNumber: apartmentNumber,
+    };
+    const token = await getAccessTokenSilently();
+    const userInfo = {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      address: address,
+      companyName: null,
+    };
+    const resp = await postSelectedOffer(offerId, userInfo, token);
+    if (resp.error) {
+      console.error(resp.error);
+      return;
+    }
+  }
+
+  return (
+    <Box component="form" onSubmit={handleSubmit}>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Offer Details</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            <MyTextField
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              type="text"
+              label="First Name"
+              isRequired={true}
+            ></MyTextField>
+            <MyTextField
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              type="text"
+              label="Last Name"
+              isRequired={true}
+            ></MyTextField>
+            <MyTextField
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              label="Email"
+              isRequired={true}
+            ></MyTextField>
+            <MyTextField
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              type="text"
+              label="City"
+              isRequired={true}
+            />
+            <MyTextField
+              value={postalCode}
+              onChange={(e) => setPostalCode(e.target.value)}
+              type="text"
+              label="Postal Code"
+              isRequired={true}
+            />
+            <MyTextField
+              value={street}
+              onChange={(e) => setStreet(e.target.value)}
+              type="text"
+              label="Street"
+              isRequired={true}
+            />
+            <MyTextField
+              value={houseNumber}
+              onChange={(e) => setHouseNumber(e.target.value)}
+              type="text"
+              label="House Number"
+              isRequired={true}
+            />
+            <MyTextField
+              value={apartmentNumber}
+              onChange={(e) => setApartmentNumber(e.target.value)}
+              type="text"
+              label="Apartment Number"
+              isRequired={true}
+            />
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            color="secondary"
+            sx={{
+              //width: 250,
+              marginY: 3,
+              paddingX: 4,
+              ":hover": { backgroundColor: "third.pinktext" },
+              textTransform: "none",
+            }}
+            disableElevation
+            variant="contained"
+            //type="submit"
+            onClick={handleSubmit}
+          >
+            <Typography fontWeight="bold" color="primary.main">
+              Submit
+            </Typography>
+          </Button>
+          <Button color="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

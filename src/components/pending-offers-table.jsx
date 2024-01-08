@@ -12,6 +12,8 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
+import { createOrder } from "../api/backendService";
+import { useAuth0 } from "@auth0/auth0-react";
 
 function InquiryCell(params) {
   const [open, setOpen] = useState(false);
@@ -54,8 +56,7 @@ function InquiryCell(params) {
               Source Address: {inquiry?.sourceAddress?.city},{" "}
               {inquiry?.sourceAddress?.street},{" "}
               {inquiry?.sourceAddress?.houseNumber},{" "}
-              {inquiry?.sourceAddress?.apartmentNumber},
-              {/* {inquiry?.sourceAddress?.posr} */}
+              {inquiry?.sourceAddress?.apartmentNumber}
             </Typography>
             <Typography margin={1}>
               Destination Address: {inquiry?.destinationAddress?.city},{" "}
@@ -81,37 +82,34 @@ function InquiryCell(params) {
               Delivery Date: {inquiry?.deliveryDate}
             </Typography>
             <Typography margin={1}>
-              Is Company:{" "}
-              <Checkbox
-                checked={inquiry?.isCompany}
-                color="secondary"
-                disabled
-                inputProps={{
-                  "aria-label": "High Priority",
-                }}
-              />
+              Is Company: <Checkbox
+          checked={inquiry?.isCompany}
+          color="secondary"
+          disabled
+          inputProps={{
+            'aria-label': 'High Priority',
+          }}
+        />
             </Typography>
             <Typography margin={1}>
-              High Priority:{" "}
-              <Checkbox
-                checked={inquiry?.highPriority}
-                color="secondary"
-                disabled
-                inputProps={{
-                  "aria-label": "High Priority",
-                }}
-              />
+              High Priority: <Checkbox
+          checked={inquiry?.highPriority}
+          color="secondary"
+          disabled
+          inputProps={{
+            'aria-label': 'High Priority',
+          }}
+        />
             </Typography>
             <Typography margin={1}>
-              Delivery At The Weekend:{" "}
-              <Checkbox
-                checked={inquiry?.deliveryAtWeekend}
-                color="secondary"
-                disabled
-                inputProps={{
-                  "aria-label": "High Priority",
-                }}
-              />
+              Delivery At The Weekend: <Checkbox
+          checked={inquiry?.deliveryAtWeekend}
+          color="secondary"
+          disabled
+          inputProps={{
+            'aria-label': 'High Priority',
+          }}
+        />
             </Typography>
             <Typography margin={1}>
               Status: {status[inquiry?.status]}
@@ -195,7 +193,7 @@ function OfferCell({ params, offers }) {
   );
 }
 
-export default function OffersTable({ rows, offers }) {
+export default function PendingOffersTable({ rows, offers, setOffers }) {
   const columns = [
     {
       field: "id",
@@ -217,14 +215,6 @@ export default function OffersTable({ rows, offers }) {
     {
       field: "price",
       headerName: "Price",
-      //width: 100,
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "status",
-      headerName: "Status",
-      //width: 150,
       align: "center",
       headerAlign: "center",
     },
@@ -238,7 +228,35 @@ export default function OffersTable({ rows, offers }) {
       disableClickEventBubbling: true,
       renderCell: (params) => <OfferCell params={params} offers={offers} />,
     },
+    {
+        field: "accept",
+        headerName: "Accept",
+        sortable: false,
+        width: 150,
+        align: "center",
+        headerAlign: "center",
+        disableClickEventBubbling: true,
+        renderCell: (params) => <Button
+        sx={{
+          bgcolor: "secondary.main",
+          marginX: "15px",
+          paddingX: "15px",
+          ":hover": { bgcolor: "secondary.dark" },
+        }}
+        disableElevation
+        onClick={() => handleAccept(params.row.id)}
+      >
+        <Typography>Accept</Typography>
+      </Button>,
+      },
   ];
+  const { getAccessTokenSilently } = useAuth0();
+  async function handleAccept(offerId) {
+    const token = await getAccessTokenSilently();
+    await createOrder(offerId, token);
+    const updatedOffers = offers.filter(offer => offer.id !== offerId);
+    setOffers(updatedOffers);
+  }
 
   return (
     <Box margin={5}>
