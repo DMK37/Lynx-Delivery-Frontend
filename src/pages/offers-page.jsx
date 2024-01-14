@@ -23,13 +23,17 @@ export default function OffersPage() {
   const handleClose = () => setOpen(false);
   const [offer, setOffer] = useState(null);
   const { getAccessTokenSilently } = useAuth0();
+  const [expireDate, setExpireDate] = useState(null); 
   const params = useParams();
   useEffect(() => {
     const crtOffers = async () => {
       const token = await getAccessTokenSilently();
       const offers = await createOffers(params.id, token);
-      //console.log(offers);
+
       setOffer(offers.response.data);
+
+      setExpireDate(new Date(offers.response.data.expireDate));
+
       localStorage.setItem("offers", JSON.stringify(offers.response.data));
     };
     crtOffers();
@@ -91,7 +95,7 @@ export default function OffersPage() {
                 variant="h6"
                 color="secondary.dark"
               >
-                Valid Until: {offer?.expireDate}
+                Valid Until: {expireDate?.getHours()}:{expireDate?.getMinutes()}
               </Typography>
             </Stack>
 

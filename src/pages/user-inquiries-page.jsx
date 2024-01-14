@@ -13,13 +13,13 @@ export default function UserInquiriesPage() {
       const token = await getAccessTokenSilently();
       const inquiries = await getInquries(token);
       if (inquiries.error == null) {
-        inquiries.response.data.map((i) => {
-          i.package =
-            i.package.height + "x" + i.package.width + "x" + i.package.length;
-          i.sourceAddress = i.sourceAddress.city;
-          i.destinationAddress = i.destinationAddress.city;
-          return i;
-        });
+        // inquiries.response.data.map((i) => {
+        //   i.package =
+        //     i.package.height + "x" + i.package.width + "x" + i.package.length;
+        //   i.sourceAddress = i.sourceAddress.city;
+        //   i.destinationAddress = i.destinationAddress.city;
+        //   return i;
+        // });
         setRows(inquiries.response.data);
       }
     };

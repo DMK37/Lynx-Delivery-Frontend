@@ -18,9 +18,15 @@ import { useAuth0 } from "@auth0/auth0-react";
 function InquiryCell(params) {
   const [open, setOpen] = useState(false);
   const [inquiry, setInquiry] = useState(null);
+  const [pickupDate, setPickupDate] = useState(null);
+  const [deliveryDate, setDeliveryDate] = useState(null);
+  const [dateOfInquiring, setDateOfInquiring] = useState(null);
 
   const handleClickOpen = async () => {
-    setInquiry(params.row.inquiry); // Store the fetched inquiry in the state
+    setInquiry(params.row.inquiry);
+    setDateOfInquiring(new Date(params.row.inquiry.dateOfInquiring));
+    setPickupDate(new Date(params.row.inquiry.pickupDate));
+    setDeliveryDate(new Date(params.row.inquiry.deliveryDate));
     setOpen(true);
   };
 
@@ -65,13 +71,19 @@ function InquiryCell(params) {
               {inquiry?.destinationAddress?.apartmentNumber}
             </Typography>
             <Typography margin={1}>
-              Date of Inquiring: {inquiry?.dateOfInquiring}
+              Date of Inquiring: {dateOfInquiring?.getFullYear().toString().padStart(2, '0')}/
+              {(dateOfInquiring?.getMonth() + 1).toString().padStart(2, '0')}/{dateOfInquiring?.getDate().toString().padStart(2, '0')}{" "}
+              {dateOfInquiring?.getHours().toString().padStart(2, '0')}:{dateOfInquiring?.getMinutes().toString().padStart(2, '0')}
             </Typography>
             <Typography margin={1}>
-              Pickup Date: {inquiry?.pickupDate}
+              Pickup Date: {pickupDate?.getFullYear().toString().padStart(2, '0')}/
+              {(pickupDate?.getMonth() + 1).toString().padStart(2, '0')}/{pickupDate?.getDate().toString().padStart(2, '0')}{" "}
+              {pickupDate?.getHours().toString().padStart(2, '0')}:{pickupDate?.getMinutes().toString().padStart(2, '0')}
             </Typography>
             <Typography margin={1}>
-              Delivery Date: {inquiry?.deliveryDate}
+              Delivery Date: {deliveryDate?.getFullYear().toString().padStart(2, '0')}/
+              {(deliveryDate?.getMonth() + 1).toString().padStart(2, '0')}/{deliveryDate?.getDate().toString().padStart(2, '0')}{" "}
+              {deliveryDate?.getHours().toString().padStart(2, '0')}:{deliveryDate?.getMinutes().toString().padStart(2, '0')}
             </Typography>
             <Typography margin={1}>
               Height: {inquiry?.package?.height}, Width:
@@ -79,37 +91,37 @@ function InquiryCell(params) {
               Weight:{inquiry?.package?.weight}
             </Typography>
             <Typography margin={1}>
-              Delivery Date: {inquiry?.deliveryDate}
+              Is Company:{" "}
+              <Checkbox
+                checked={inquiry?.isCompany}
+                color="secondary"
+                disabled
+                inputProps={{
+                  "aria-label": "High Priority",
+                }}
+              />
             </Typography>
             <Typography margin={1}>
-              Is Company: <Checkbox
-          checked={inquiry?.isCompany}
-          color="secondary"
-          disabled
-          inputProps={{
-            'aria-label': 'High Priority',
-          }}
-        />
+              High Priority:{" "}
+              <Checkbox
+                checked={inquiry?.highPriority}
+                color="secondary"
+                disabled
+                inputProps={{
+                  "aria-label": "High Priority",
+                }}
+              />
             </Typography>
             <Typography margin={1}>
-              High Priority: <Checkbox
-          checked={inquiry?.highPriority}
-          color="secondary"
-          disabled
-          inputProps={{
-            'aria-label': 'High Priority',
-          }}
-        />
-            </Typography>
-            <Typography margin={1}>
-              Delivery At The Weekend: <Checkbox
-          checked={inquiry?.deliveryAtWeekend}
-          color="secondary"
-          disabled
-          inputProps={{
-            'aria-label': 'High Priority',
-          }}
-        />
+              Delivery At The Weekend:{" "}
+              <Checkbox
+                checked={inquiry?.deliveryAtWeekend}
+                color="secondary"
+                disabled
+                inputProps={{
+                  "aria-label": "High Priority",
+                }}
+              />
             </Typography>
             <Typography margin={1}>
               Status: {status[inquiry?.status]}
@@ -129,9 +141,14 @@ function InquiryCell(params) {
 function OfferCell({ params, offers }) {
   const [open, setOpen] = useState(false);
   const [offer, setOffer] = useState(null);
+  const [creationDate, setCreationDate] = useState(null);
+  const [expireDate, setExpireDate] = useState(null);
+  const [updateDate, setUpdateDate] = useState(null);
   const handleClickOpen = async () => {
     const off = offers.find((offer) => offer.id === params.row.id);
-    console.log(off);
+    setCreationDate(new Date(off.creationDate));
+    setExpireDate(new Date(off.expireDate));
+    setUpdateDate(new Date(off.updateDate));
     setOffer(off);
     setOpen(true);
   };
@@ -160,10 +177,20 @@ function OfferCell({ params, offers }) {
           <DialogContentText>
             <Typography margin={1}>Offer Id: {offer?.id}</Typography>
             <Typography margin={1}>
-              Creation Date: {offer?.creationDate}
+              Creation Date: {creationDate?.getFullYear().toString().padStart(2, '0')}/
+              {(creationDate?.getMonth() + 1).toString().padStart(2, '0')}/{creationDate?.getDate().toString().padStart(2, '0')}{" "}
+              {creationDate?.getHours().toString().padStart(2, '0')}:{creationDate?.getMinutes().toString().padStart(2, '0')}
             </Typography>
-            <Typography margin={1}>Expire Date: {offer?.expireDate}</Typography>
-            <Typography margin={1}>Update Date: {offer?.updateDate}</Typography>
+            <Typography margin={1}>
+              Expire Date: {expireDate?.getFullYear().toString().padStart(2, '0')}/
+              {(expireDate?.getMonth() + 1).toString().padStart(2, '0')}/{expireDate?.getDate().toString().padStart(2, '0')}{" "}
+              {expireDate?.getHours().toString().padStart(2, '0')}:{expireDate?.getMinutes().toString().padStart(2, '0')}
+            </Typography>
+            <Typography margin={1}>
+              Update Date: {updateDate?.getFullYear().toString().padStart(2, '0')}/
+              {(updateDate?.getMonth() + 1).toString().padStart(2, '0')}/{updateDate?.getDate().toString().padStart(2, '0')}{" "}
+              {updateDate?.getHours().toString().padStart(2, '0')}:{updateDate?.getMinutes().toString().padStart(2, '0')}
+            </Typography>
             {offer?.reasonOfRejection && (
               <Typography margin={1}>
                 Reason Of Rejection: {offer?.reasonOfRejection}
@@ -229,32 +256,35 @@ export default function PendingOffersTable({ rows, offers, setOffers }) {
       renderCell: (params) => <OfferCell params={params} offers={offers} />,
     },
     {
-        field: "accept",
-        headerName: "Accept",
-        sortable: false,
-        width: 150,
-        align: "center",
-        headerAlign: "center",
-        disableClickEventBubbling: true,
-        renderCell: (params) => <Button
-        sx={{
-          bgcolor: "secondary.main",
-          marginX: "15px",
-          paddingX: "15px",
-          ":hover": { bgcolor: "secondary.dark" },
-        }}
-        disableElevation
-        onClick={() => handleAccept(params.row.id)}
-      >
-        <Typography>Accept</Typography>
-      </Button>,
-      },
+      field: "accept",
+      headerName: "Accept",
+      sortable: false,
+      width: 150,
+      align: "center",
+      headerAlign: "center",
+      disableClickEventBubbling: true,
+      renderCell: (params) => (
+        <Button
+          sx={{
+            bgcolor: "secondary.main",
+            marginX: "15px",
+            paddingX: "15px",
+            ":hover": { bgcolor: "secondary.dark" },
+          }}
+          disableElevation
+          onClick={() => handleAccept(params.row.id)}
+        >
+          <Typography>Accept</Typography>
+        </Button>
+      ),
+    },
   ];
   const { getAccessTokenSilently } = useAuth0();
   async function handleAccept(offerId) {
     const token = await getAccessTokenSilently();
     await createOrder(offerId, token);
-    const updatedOffers = offers.filter(offer => offer.id !== offerId);
+    const updatedOffers = offers.filter((offer) => offer.id !== offerId);
+    console.log(updatedOffers);
     setOffers(updatedOffers);
   }
 
