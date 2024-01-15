@@ -73,11 +73,7 @@ export default function CreateInquiryPage() {
       highPriority: highPriority,
       deliveryAtWeekend: atWeekend,
     };
-    let token = null;
-    if (isAuthenticated) {
-      token = await getAccessTokenSilently();
-    }
-    const inq = await createInqury(inquiry, token);
+    const inq = await createInqury(inquiry);
     //const offers = await createOffers(inq.response.data.id, token);
     navigate(`/${inq.response.data.id}/offers`);
   }

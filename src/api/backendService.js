@@ -41,12 +41,12 @@ const handleError = (error) => {
   };
 };
 
-export const createInqury = async (inquiry, accessToken) => {
+export const createInqury = async (inquiry) => {
   try {
     const response = await apiClient.post(`/inquiries`, inquiry, {
       headers: {
         "content-type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
+        //Authorization: `Bearer ${accessToken}`,
       },
     });
     return {
@@ -225,7 +225,7 @@ export const getUserInfo = async (accessToken) => {
   }
 };
 
-export const createOffers = async (inquiryId, accessToken) => {
+export const createOffers = async (inquiryId) => {
   try {
     const response = await apiClient.post(
       `offers/getAll`,
@@ -235,7 +235,7 @@ export const createOffers = async (inquiryId, accessToken) => {
       {
         headers: {
           "content-type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
+          //Authorization: `Bearer ${accessToken}`,
         },
       }
     );

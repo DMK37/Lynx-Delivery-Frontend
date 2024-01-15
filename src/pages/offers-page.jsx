@@ -21,20 +21,15 @@ export default function OffersPage() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [offer, setOffer] = useState(null);
+  const [offers, setOffers] = useState(null);
   const { getAccessTokenSilently } = useAuth0();
-  const [expireDate, setExpireDate] = useState(null); 
+  
   const params = useParams();
   useEffect(() => {
     const crtOffers = async () => {
-      const token = await getAccessTokenSilently();
-      const offers = await createOffers(params.id, token);
-
-      setOffer(offers.response.data);
-
-      setExpireDate(new Date(offers.response.data.expireDate));
-
-      localStorage.setItem("offers", JSON.stringify(offers.response.data));
+      const offers = await createOffers(params.id);
+      setOffers(offers.response.data);
+      //localStorage.setItem("offers", JSON.stringify(offers.response.data));
     };
     crtOffers();
   }, [getAccessTokenSilently, params.id]);
@@ -56,7 +51,9 @@ export default function OffersPage() {
         justifyContent="center"
         margin="auto"
       >
-        <Box
+        {offers?.map((offer) => {
+          
+          return(<Box
           sx={{
             maxWidth: "xl",
             border: "1px solid",
@@ -81,21 +78,21 @@ export default function OffersPage() {
                 variant="h5"
                 color="secondary.dark"
               >
-                Lynx Delivery
+                {offer?.company}
               </Typography>
               <Typography
                 sx={{ marginX: 5 }}
                 variant="h6"
                 color="secondary.dark"
               >
-                Price: {offer?.price.fullPrice}
+                Price: {offer?.totalPrice} PLN
               </Typography>
               <Typography
                 sx={{ marginX: 5 }}
                 variant="h6"
                 color="secondary.dark"
               >
-                Valid Until: {expireDate?.getHours()}:{expireDate?.getMinutes()}
+                Valid Until: {new Date(offer?.expiringAt).getHours()}:{new Date(offer?.expiringAt).getMinutes()}
               </Typography>
             </Stack>
 
@@ -125,9 +122,12 @@ export default function OffersPage() {
                 Pick Offer
               </Typography>
             </Button>
+
+
             <OfferDetails open={open} handleClose={handleClose} offerId={offer?.id} />
           </Stack>
-        </Box>
+        </Box>);
+        })}
       </Stack>
     </Box>
   );
@@ -139,15 +139,17 @@ function OfferDetails({ open, handleClose, offerId }) {
   const [street, setStreet] = useState("");
   const [houseNumber, setHouseNumber] = useState("");
   const [apartmentNumber, setApartmentNumber] = useState("");
-  const { getAccessTokenSilently } = useAuth0();
+  const { getAccessTokenSilently, isAuthenticated } = useAuth0();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
 
   useEffect(() => {
     const fetchUserInfo = async () => {
-      const token = await getAccessTokenSilently();
-      const response = await getUserInfo(token);
+      if(isAuthenticated) {
+        const token = await getAccessTokenSilently();
+
+        const response = await getUserInfo(token);
 
       if (response.error) {
         console.error(response.error);
@@ -162,10 +164,11 @@ function OfferDetails({ open, handleClose, offerId }) {
       setFirstName(userInfo.firstName);
       setLastName(userInfo.lastName);
       setEmail(userInfo.email);
+      }
     };
 
     fetchUserInfo(); // Call the function
-  }, [getAccessTokenSilently]);
+  }, [getAccessTokenSilently, isAuthenticated]);
   async function handleSubmit() {
     console.log("submit");
     //event.preventDefault();
