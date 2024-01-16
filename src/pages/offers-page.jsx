@@ -196,7 +196,6 @@ function OfferDetails({ open, handleClose, offerId }) {
       houseNumber: houseNumber,
       apartmentNumber: apartmentNumber,
     };
-    const token = await getAccessTokenSilently();
     const userInfo = {
       firstName: firstName,
       lastName: lastName,
