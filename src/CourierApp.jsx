@@ -11,6 +11,11 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { PageLoader } from "./components/page-loader";
 import { NotFoundPage } from "./pages/not-found-page";
 import { AuthenticationGuard } from "./auth/authentication-guard";
+import UserInquiriesPage from "./pages/user-inquiries-page";
+import OffersPage from "./pages/offers-page";
+import AllInquiriesPage from "./pages/all-inquiries-page";
+import AllOffersPage from "./pages/all-offers-page";
+import PendingOffersPage from "./pages/pending-offers-page";
 
 const theme = createTheme({
   palette: {
@@ -28,6 +33,7 @@ const theme = createTheme({
       main: "#173C49",
       pink: "#f8d7c6",
       pinktext: "#ec5d2a",
+      semydark: "#3c8794"
     },
     textfield: {
       main: "#9c9c9c",
@@ -40,6 +46,7 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: "Inter",
+    fontSize: 15
   },
 });
 
@@ -56,15 +63,34 @@ export default function CourierApp() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box bgcolor="primary.main" sx={{ flexGrow: 1 }} height="100vh">
+      <Box bgcolor="primary.main" sx={{ flexGrow: 1 }} minHeight= '100vh'>
         <Routes>
           <Route element={<WithAppBar />}>
             <Route path="/" element={<MainPage />} />
             <Route path="/create-inquiry" element={<CreateInquiryPage />} />
-            <Route path="*" element={<NotFoundPage />} /><Route
+            <Route
+             path="/:id/offers" element={<OffersPage />} />
+            <Route
               path="/profile"
               element={<AuthenticationGuard component={ProfilePage} />}
             />
+            <Route
+              path="/inquiries"
+              element={<AuthenticationGuard component={UserInquiriesPage} />}
+            />
+            <Route
+              path="/all-inquiries"
+              element={<AuthenticationGuard component={AllInquiriesPage} />}
+            />
+            <Route
+              path="/all-offers"
+              element={<AuthenticationGuard component={AllOffersPage} />}
+            />
+            <Route
+              path="/pending-offers"
+              element={<AuthenticationGuard component={PendingOffersPage} />}
+            />
+            <Route path="*" element={<NotFoundPage />} />
           </Route>
           <Route element={<WithoutAppBar />}>
             {

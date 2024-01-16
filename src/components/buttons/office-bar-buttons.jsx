@@ -9,7 +9,7 @@ import { ReactComponent as Logo } from "../../images/profile-circle.svg";
 import SvgIcon from "@mui/material/SvgIcon";
 import { useState } from "react";
 
-export const NavBarButtons = () => {
+export const OfficeBarButtons = () => {
   const { isAuthenticated } = useAuth0();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -60,11 +60,11 @@ export const NavBarButtons = () => {
               "aria-labelledby": "basic-button",
             }}
           >
-            <MenuItem onClick={() => navigate("/profile")}>Profile</MenuItem>
-            <MenuItem onClick={() => navigate("/inquiries")}>
-              Inquiries
+            <MenuItem onClick={() => navigate("/all-inquiries")}>All Inquiries</MenuItem>
+            <MenuItem onClick={() => navigate("/pending-offers")}>
+              Pending Offers
             </MenuItem>
-            <MenuItem onClick={() => navigate("/orders")}>Orders</MenuItem>
+            <MenuItem onClick={() => navigate("/all-offers")}>All Offers</MenuItem>
           </Menu>
           <Box width="25px" />
           <LogoutButton />

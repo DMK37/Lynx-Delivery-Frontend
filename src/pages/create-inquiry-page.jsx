@@ -15,8 +15,10 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { createInqury, getUserInfo } from "../api/backendService";
 import { useAuth0 } from "@auth0/auth0-react";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateInquiryPage() {
+  const navigate = useNavigate();
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
   const [deliveryDate, setDeliveryDate] = useState(dayjs());
   const [pickUpDate, setPickUpDate] = useState(dayjs());
@@ -40,7 +42,7 @@ export default function CreateInquiryPage() {
   async function handleSubmit(event) {
     event.preventDefault();
     let userId = null;
-    if(isAuthenticated) {
+    if (isAuthenticated) {
       userId = user.sub;
     }
     const inquiry = {
@@ -71,17 +73,17 @@ export default function CreateInquiryPage() {
       highPriority: highPriority,
       deliveryAtWeekend: atWeekend,
     };
-    let token = null;
-    if (isAuthenticated) {
-      token = await getAccessTokenSilently();
-    }
-    createInqury(inquiry, token);
+    const inq = await createInqury(inquiry);
+    //const offers = await createOffers(inq.response.data.id, token);
+    navigate(`/${inq.response.data.id}/offers`);
   }
 
   useEffect(() => {
     if (!isAuthenticated) return;
     const setValues = async () => {
       const token = await getAccessTokenSilently();
+      // const decoded = jwtDecode(token);
+      // console.log(decoded);
       const userInfo = await getUserInfo(token);
       if (userInfo.error == null) {
         setSCity(userInfo.response.data.defaultSourceAddress.city);
@@ -178,7 +180,12 @@ export default function CreateInquiryPage() {
               </Box>
             </Stack>
 
-            <Stack sx={{ marginX: 5, marginBottom: 5 }}>
+            <Stack
+              sx={{ marginX: 5, marginBottom: 5 }}
+              alignItems="center"
+              justifyContent="center"
+              margin="auto"
+            >
               <Box
                 border={1}
                 sx={{
@@ -197,20 +204,27 @@ export default function CreateInquiryPage() {
                   Delivery Information
                 </Typography>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    label="Pickup Date"
-                    value={pickUpDate}
-                    onChange={(newValue) => setPickUpDate(newValue)}
-                    disablePast
-                  />
-                </LocalizationProvider>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    label="Delivery Date"
-                    value={deliveryDate}
-                    onChange={(newValue) => setDeliveryDate(newValue)}
-                    disablePast
-                  />
+                  <Stack
+                    spacing={2}
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="center"
+                    margin="auto"
+                  >
+                    <DatePicker
+                      label="Pickup Date"
+                      value={pickUpDate}
+                      onChange={(newValue) => setPickUpDate(newValue)}
+                      disablePast
+                    />
+
+                    <DatePicker
+                      label="Delivery Date"
+                      value={deliveryDate}
+                      onChange={(newValue) => setDeliveryDate(newValue)}
+                      disablePast
+                    />
+                  </Stack>
                 </LocalizationProvider>
                 <Typography
                   variant="h5"
@@ -301,20 +315,20 @@ export default function CreateInquiryPage() {
                 <Box>
                   <FormControlLabel
                     checked={isCompany}
-                    onChange={e => setIsCompany(e.target.checked)}
-                    control={<Checkbox  />}
+                    onChange={(e) => setIsCompany(e.target.checked)}
+                    control={<Checkbox />}
                     label="Is Company"
                   />
                   <FormControlLabel
                     checked={highPriority}
-                    onChange={e => setHighPriority(e.target.checked)}
-                    control={<Checkbox  />}
+                    onChange={(e) => setHighPriority(e.target.checked)}
+                    control={<Checkbox />}
                     label="High Priority"
                   />
                   <FormControlLabel
                     checked={atWeekend}
-                    onChange={e => setAtWeekend(e.target.checked)}
-                    control={<Checkbox  />}
+                    onChange={(e) => setAtWeekend(e.target.checked)}
+                    control={<Checkbox />}
                     label="Delivery at the weekend"
                   />
                 </Box>

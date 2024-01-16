@@ -10,13 +10,13 @@ import { Auth0ProviderWithNavigate } from "./auth/auth0-provider-with-navigate";
 const container = document.getElementById("root");
 const root = createRoot(container);
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <BrowserRouter>
       <Auth0ProviderWithNavigate>
         <CourierApp />
       </Auth0ProviderWithNavigate>
     </BrowserRouter>
-  </React.StrictMode>
+  // </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

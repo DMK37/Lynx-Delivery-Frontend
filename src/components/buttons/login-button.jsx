@@ -1,7 +1,7 @@
 import Button from "@mui/material/Button";
 import { useAuth0 } from "@auth0/auth0-react";
 import UnderlinedTypography from "../underlined-typography";
-export default function LoginButton(second) {
+export default function LoginButton() {
   const { loginWithRedirect } = useAuth0();
 
   const handleLogin = async () => {
