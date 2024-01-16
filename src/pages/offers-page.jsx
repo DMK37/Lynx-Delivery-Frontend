@@ -13,7 +13,11 @@ import SvgIcon from "@mui/material/SvgIcon";
 import { ReactComponent as Logo } from "../images/BlackLynx.svg";
 import { useEffect, useState } from "react";
 import MyTextField from "../components/my-text-field";
-import { createOffers, getUserInfo, postSelectedOffer } from "../api/backendService";
+import {
+  createOffers,
+  getUserInfo,
+  postSelectedOffer,
+} from "../api/backendService";
 import { useParams } from "react-router";
 import { useAuth0 } from "@auth0/auth0-react";
 
@@ -23,7 +27,7 @@ export default function OffersPage() {
   const handleClose = () => setOpen(false);
   const [offers, setOffers] = useState(null);
   const { getAccessTokenSilently } = useAuth0();
-  
+
   const params = useParams();
   useEffect(() => {
     const crtOffers = async () => {
@@ -52,81 +56,94 @@ export default function OffersPage() {
         margin="auto"
       >
         {offers?.map((offer) => {
-          
-          return(<Box
-          sx={{
-            maxWidth: "xl",
-            border: "1px solid",
-            borderRadius: "30px",
-            borderColor: "secondary.dark",
-            bgcolor: "primary.dark",
-          }}
-        >
-          <Stack
-            direction="row"
-            sx={{ margin: 5, borderRadius: "30px" }}
-            alignItems="center"
-            justifyContent="center" // Add this line
-            margin="auto"
-          >
-            <SvgIcon sx={{ fontSize: 70, borderRadius: "30%" }}>
-              <Logo />
-            </SvgIcon>
-            <Stack flexGrow="1">
-              <Typography
-                sx={{ marginX: 5, marginBottom: 5 }}
-                variant="h5"
-                color="secondary.dark"
-              >
-                {offer?.company}
-              </Typography>
-              <Typography
-                sx={{ marginX: 5 }}
-                variant="h6"
-                color="secondary.dark"
-              >
-                Price: {offer?.totalPrice} PLN
-              </Typography>
-              <Typography
-                sx={{ marginX: 5 }}
-                variant="h6"
-                color="secondary.dark"
-              >
-                Valid Until: {new Date(offer?.expiringAt).getHours()}:{new Date(offer?.expiringAt).getMinutes()}
-              </Typography>
-            </Stack>
-
-            <Button
-              onClick={handleOpen}
+          return (
+            <Box
               sx={{
-                bgcolor: "secondary.dark",
-                marginX: "15px",
-                paddingX: "15px",
-                ":hover": { bgcolor: "#616161" },
+                maxWidth: "xl",
+                border: "1px solid",
+                borderRadius: "30px",
+                borderColor: "secondary.dark",
+                bgcolor: "primary.dark",
               }}
-              size="medium"
-              disableElevation
             >
-              <Typography
-                noWrap
-                component="div"
-                sx={{
-                  textTransform: "none",
-                  color: "primary.main",
-                  fontSize: 15,
-                  fontWeight: "bold",
-                  display: { sm: "block" },
-                  verticalAlign: "middle",
-                }}
+              <Stack
+                direction="row"
+                sx={{ margin: 5, borderRadius: "30px" }}
+                alignItems="center"
+                justifyContent="center" // Add this line
+                margin="auto"
               >
-                Pick Offer
-              </Typography>
-            </Button>
+                <SvgIcon sx={{ fontSize: 70, borderRadius: "30%" }}>
+                  <Logo />
+                </SvgIcon>
+                <Stack flexGrow="1">
+                  <Typography
+                    sx={{ marginX: 5, marginBottom: 5 }}
+                    variant="h5"
+                    color="secondary.dark"
+                  >
+                    {offer?.company}
+                  </Typography>
+                  <Typography
+                    sx={{ marginX: 5 }}
+                    variant="h6"
+                    color="secondary.dark"
+                  >
+                    Price: {offer?.totalPrice} PLN
+                  </Typography>
+                  <Typography
+                    sx={{ marginX: 5 }}
+                    variant="h6"
+                    color="secondary.dark"
+                  >
+                    Valid Until:{" "}
+                    {new Date(offer?.expiringAt)
+                      .getHours()
+                      .toString()
+                      .padStart(2, "0")}
+                    :
+                    {new Date(offer?.expiringAt)
+                      .getMinutes()
+                      .toString()
+                      .padStart(2, "0")}
+                  </Typography>
+                </Stack>
 
+                <Button
+                  onClick={handleOpen}
+                  sx={{
+                    bgcolor: "secondary.dark",
+                    marginX: "15px",
+                    paddingX: "15px",
+                    ":hover": { bgcolor: "#616161" },
+                  }}
+                  size="medium"
+                  disableElevation
+                >
+                  <Typography
+                    noWrap
+                    component="div"
+                    sx={{
+                      textTransform: "none",
+                      color: "primary.main",
+                      fontSize: 15,
+                      fontWeight: "bold",
+                      display: { sm: "block" },
+                      verticalAlign: "middle",
+                    }}
+                  >
+                    Pick Offer
+                  </Typography>
+                </Button>
 
-            <OfferDetails open={open} handleClose={handleClose} offerId={offer?.id} />
-          </Stack>
-        </Box>);
+                <OfferDetails
+                  open={open}
+                  handleClose={handleClose}
+                  offerId={offer?.id}
+                />
+              </Stack>
+            </Box>
+          );
         })}
       </Stack>
     </Box>
@@ -146,24 +163,24 @@ function OfferDetails({ open, handleClose, offerId }) {
 
   useEffect(() => {
     const fetchUserInfo = async () => {
-      if(isAuthenticated) {
+      if (isAuthenticated) {
         const token = await getAccessTokenSilently();
 
         const response = await getUserInfo(token);
 
-      if (response.error) {
-        console.error(response.error);
-        return;
-      }
-      const userInfo = response.response.data;
-      setCity(userInfo.address.city);
-      setPostalCode(userInfo.address.postalCode);
-      setStreet(userInfo.address.street);
-      setHouseNumber(userInfo.address.houseNumber);
-      setApartmentNumber(userInfo.address.apartmentNumber);
-      setFirstName(userInfo.firstName);
-      setLastName(userInfo.lastName);
-      setEmail(userInfo.email);
+        if (response.error) {
+          console.error(response.error);
+          return;
+        }
+        const userInfo = response.response.data;
+        setCity(userInfo.address.city);
+        setPostalCode(userInfo.address.postalCode);
+        setStreet(userInfo.address.street);
+        setHouseNumber(userInfo.address.houseNumber);
+        setApartmentNumber(userInfo.address.apartmentNumber);
+        setFirstName(userInfo.firstName);
+        setLastName(userInfo.lastName);
+        setEmail(userInfo.email);
       }
     };
 
@@ -187,7 +204,7 @@ function OfferDetails({ open, handleClose, offerId }) {
       address: address,
       companyName: null,
     };
-    const resp = await postSelectedOffer(offerId, userInfo, token);
+    const resp = await postSelectedOffer(offerId, userInfo);
     if (resp.error) {
       console.error(resp.error);
       return;

@@ -63,11 +63,11 @@ export default function MyAppBar() {
               LynxDelivery
             </Typography>
 
-            <Box sx={{ flexGrow: 1, display: "flex" }}>
+            {!jwt.includes("read:all-pending-offers") && <Box sx={{ flexGrow: 1, display: "flex" }}>
               <Link component={RouterLink} to="/create-inquiry">
                 <UnderlinedTypography text={pages[0]} />
               </Link>
-            </Box>
+            </Box>}
 
             {!jwt.includes("read:all-pending-offers") && <NavBarButtons />}
             {jwt.includes("read:all-pending-offers") && <OfficeBarButtons />}
