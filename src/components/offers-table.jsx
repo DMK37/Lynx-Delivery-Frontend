@@ -70,19 +70,28 @@ function InquiryCell(params) {
               {inquiry?.destinationAddress?.apartmentNumber}
             </Typography>
             <Typography margin={1}>
-              Date of Inquiring: {dateOfInquiring?.getFullYear().toString().padStart(2, '0')}/
-              {(dateOfInquiring?.getMonth() + 1).toString().padStart(2, '0')}/{dateOfInquiring?.getDate().toString().padStart(2, '0')}{" "}
-              {dateOfInquiring?.getHours().toString().padStart(2, '0')}:{dateOfInquiring?.getMinutes().toString().padStart(2, '0')}
+              Date of Inquiring:{" "}
+              {dateOfInquiring?.getFullYear().toString().padStart(2, "0")}/
+              {(dateOfInquiring?.getMonth() + 1).toString().padStart(2, "0")}/
+              {dateOfInquiring?.getDate().toString().padStart(2, "0")}{" "}
+              {dateOfInquiring?.getHours().toString().padStart(2, "0")}:
+              {dateOfInquiring?.getMinutes().toString().padStart(2, "0")}
             </Typography>
             <Typography margin={1}>
-              Pickup Date: {pickupDate?.getFullYear().toString().padStart(2, '0')}/
-              {(pickupDate?.getMonth() + 1).toString().padStart(2, '0')}/{pickupDate?.getDate().toString().padStart(2, '0')}{" "}
-              {pickupDate?.getHours().toString().padStart(2, '0')}:{pickupDate?.getMinutes().toString().padStart(2, '0')}
+              Pickup Date:{" "}
+              {pickupDate?.getFullYear().toString().padStart(2, "0")}/
+              {(pickupDate?.getMonth() + 1).toString().padStart(2, "0")}/
+              {pickupDate?.getDate().toString().padStart(2, "0")}{" "}
+              {pickupDate?.getHours().toString().padStart(2, "0")}:
+              {pickupDate?.getMinutes().toString().padStart(2, "0")}
             </Typography>
             <Typography margin={1}>
-              Delivery Date: {deliveryDate?.getFullYear().toString().padStart(2, '0')}/
-              {(deliveryDate?.getMonth() + 1).toString().padStart(2, '0')}/{deliveryDate?.getDate().toString().padStart(2, '0')}{" "}
-              {deliveryDate?.getHours().toString().padStart(2, '0')}:{deliveryDate?.getMinutes().toString().padStart(2, '0')}
+              Delivery Date:{" "}
+              {deliveryDate?.getFullYear().toString().padStart(2, "0")}/
+              {(deliveryDate?.getMonth() + 1).toString().padStart(2, "0")}/
+              {deliveryDate?.getDate().toString().padStart(2, "0")}{" "}
+              {deliveryDate?.getHours().toString().padStart(2, "0")}:
+              {deliveryDate?.getMinutes().toString().padStart(2, "0")}
             </Typography>
             <Typography margin={1}>
               Height: {inquiry?.package?.height}, Width:
@@ -176,19 +185,28 @@ function OfferCell({ params, offers }) {
           <DialogContentText>
             <Typography margin={1}>Offer Id: {offer?.id}</Typography>
             <Typography margin={1}>
-              Creation Date: {creationDate?.getFullYear().toString().padStart(2, '0')}/
-              {(creationDate?.getMonth() + 1).toString().padStart(2, '0')}/{creationDate?.getDate().toString().padStart(2, '0')}{" "}
-              {creationDate?.getHours().toString().padStart(2, '0')}:{creationDate?.getMinutes().toString().padStart(2, '0')}
+              Creation Date:{" "}
+              {creationDate?.getFullYear().toString().padStart(2, "0")}/
+              {(creationDate?.getMonth() + 1).toString().padStart(2, "0")}/
+              {creationDate?.getDate().toString().padStart(2, "0")}{" "}
+              {creationDate?.getHours().toString().padStart(2, "0")}:
+              {creationDate?.getMinutes().toString().padStart(2, "0")}
             </Typography>
             <Typography margin={1}>
-              Expire Date: {expireDate?.getFullYear().toString().padStart(2, '0')}/
-              {(expireDate?.getMonth() + 1).toString().padStart(2, '0')}/{expireDate?.getDate().toString().padStart(2, '0')}{" "}
-              {expireDate?.getHours().toString().padStart(2, '0')}:{expireDate?.getMinutes().toString().padStart(2, '0')}
+              Expire Date:{" "}
+              {expireDate?.getFullYear().toString().padStart(2, "0")}/
+              {(expireDate?.getMonth() + 1).toString().padStart(2, "0")}/
+              {expireDate?.getDate().toString().padStart(2, "0")}{" "}
+              {expireDate?.getHours().toString().padStart(2, "0")}:
+              {expireDate?.getMinutes().toString().padStart(2, "0")}
             </Typography>
             <Typography margin={1}>
-              Update Date: {updateDate?.getFullYear().toString().padStart(2, '0')}/
-              {(updateDate?.getMonth() + 1).toString().padStart(2, '0')}/{updateDate?.getDate().toString().padStart(2, '0')}{" "}
-              {updateDate?.getHours().toString().padStart(2, '0')}:{updateDate?.getMinutes().toString().padStart(2, '0')}
+              Update Date:{" "}
+              {updateDate?.getFullYear().toString().padStart(2, "0")}/
+              {(updateDate?.getMonth() + 1).toString().padStart(2, "0")}/
+              {updateDate?.getDate().toString().padStart(2, "0")}{" "}
+              {updateDate?.getHours().toString().padStart(2, "0")}:
+              {updateDate?.getMinutes().toString().padStart(2, "0")}
             </Typography>
             {offer?.reasonOfRejection && (
               <Typography margin={1}>
@@ -197,7 +215,7 @@ function OfferCell({ params, offers }) {
             )}
             <Typography margin={1}>
               Price: Full Price: {offer?.price.fullPrice}, Base Delivery Price:
-              {offer?.price.daseDeliveryPrice}, Weight Fee:{" "}
+              {offer?.price.baseDeliveryPrice}, Weight Fee:{" "}
               {offer?.price.weightFee}, Size Fee: {offer?.price.sizeFee},
               Priority Fee: {offer?.price.priorityFee}, Delivery At Weekend Fee:{" "}
               {offer?.price.deliveryAtWeekendFee}

@@ -12,6 +12,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { jwtDecode } from "jwt-decode";
 import { useEffect, useState } from "react";
 import { OfficeBarButtons } from "./buttons/office-bar-buttons";
+import { CourierBarButtons } from "./buttons/courier-bar-buttons";
 
 export default function MyAppBar() {
   const pages = ["Create Inquiry"];
@@ -63,14 +64,15 @@ export default function MyAppBar() {
               LynxDelivery
             </Typography>
 
-            {!jwt.includes("read:all-pending-offers") && <Box sx={{ flexGrow: 1, display: "flex" }}>
+            {!jwt.includes("read:all-pending-offers") && !jwt.includes("edit:order") && <Box sx={{ flexGrow: 1, display: "flex" }}>
               <Link component={RouterLink} to="/create-inquiry">
                 <UnderlinedTypography text={pages[0]} />
               </Link>
             </Box>}
 
-            {!jwt.includes("read:all-pending-offers") && <NavBarButtons />}
+            {!jwt.includes("read:all-pending-offers") && !jwt.includes("edit:order") && <NavBarButtons />}
             {jwt.includes("read:all-pending-offers") && <OfficeBarButtons />}
+            {jwt.includes("edit:order") && <CourierBarButtons />}
           </Toolbar>
         </AppBar>
       </Slide>

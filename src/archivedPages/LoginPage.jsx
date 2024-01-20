@@ -12,7 +12,6 @@ import MyTextField from "../components/MyTextField";
 export default function LoginPage() {
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
   };
 
   return (

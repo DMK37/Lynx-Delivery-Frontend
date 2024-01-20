@@ -247,3 +247,45 @@ export const createOffers = async (inquiryId) => {
     return handleError(error);
   }
 };
+
+export const getAllOrders = async (accessToken) => {
+  try {
+    const response = await apiClient.get(`orders`, {
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return {
+      response,
+      error: null,
+    };
+  } catch (error) {
+    return handleError(error);
+  }
+}
+
+export const patchOrder = async (orderId, orderStatus, comment, courierName, accessToken) => {
+  try {
+    const response = await apiClient.patch(
+      `orders/${orderId}`,
+      {
+        orderStatus: orderStatus,
+        comment: comment,
+        courierName: courierName,
+      },
+      {
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return {
+      response,
+      error: null,
+    };
+  } catch (error) {
+    return handleError(error);
+  }
+}

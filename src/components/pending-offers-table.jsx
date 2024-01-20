@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   Checkbox,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -11,8 +12,8 @@ import {
   DialogTitle,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
-import { createOrder } from "../api/backendService";
+import { useState, useEffect } from "react";
+import { createOrder, getPendingOffers } from "../api/backendService";
 import { useAuth0 } from "@auth0/auth0-react";
 
 function InquiryCell(params) {
@@ -238,7 +239,38 @@ function OfferCell({ params, offers }) {
   );
 }
 
-export default function PendingOffersTable({ rows, offers, setOffers }) {
+export default function PendingOffersTable() {
+  const { getAccessTokenSilently } = useAuth0();
+
+  const [refresh, setRefresh] = useState(false);
+  const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const setValues = async () => {
+      const token = await getAccessTokenSilently();
+      const offers = await getPendingOffers(token);
+      if (offers.error == null) {
+        setRows(offers.response.data);
+      }
+      setLoading(false);
+    };
+    setValues();
+  }, [getAccessTokenSilently, refresh]);
+
+  if (loading) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+      >
+        <CircularProgress color="secondary" />
+      </Box>
+    );
+  }
+
   const columns = [
     {
       field: "id",
@@ -262,6 +294,7 @@ export default function PendingOffersTable({ rows, offers, setOffers }) {
       headerName: "Price",
       align: "center",
       headerAlign: "center",
+      valueGetter: (params) => params.row.price.fullPrice + " PLN",
     },
     {
       field: "fullDetails",
@@ -271,7 +304,7 @@ export default function PendingOffersTable({ rows, offers, setOffers }) {
       align: "center",
       headerAlign: "center",
       disableClickEventBubbling: true,
-      renderCell: (params) => <OfferCell params={params} offers={offers} />,
+      renderCell: (params) => <OfferCell params={params} offers={rows} />,
     },
     {
       field: "accept",
@@ -297,13 +330,14 @@ export default function PendingOffersTable({ rows, offers, setOffers }) {
       ),
     },
   ];
-  const { getAccessTokenSilently } = useAuth0();
   async function handleAccept(offerId) {
     const token = await getAccessTokenSilently();
     await createOrder(offerId, token);
-    const updatedOffers = offers.filter((offer) => offer.id !== offerId);
+    const updatedOffers = rows.filter((offer) => offer.id !== offerId);
     // console.log(updatedOffers);
-    setOffers(updatedOffers);
+    setRows(updatedOffers);
+    setRefresh(!refresh);
+    setLoading(true);
   }
 
   return (

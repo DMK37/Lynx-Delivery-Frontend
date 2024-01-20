@@ -16,6 +16,7 @@ import OffersPage from "./pages/offers-page";
 import AllInquiriesPage from "./pages/all-inquiries-page";
 import AllOffersPage from "./pages/all-offers-page";
 import PendingOffersPage from "./pages/pending-offers-page";
+import AllOrdersPage from "./pages/all-orders-page";
 
 const theme = createTheme({
   palette: {
@@ -85,6 +86,10 @@ export default function CourierApp() {
             <Route
               path="/all-offers"
               element={<AuthenticationGuard component={AllOffersPage} />}
+            />
+            <Route
+              path="/all-orders"
+              element={<AuthenticationGuard component={AllOrdersPage} />}
             />
             <Route
               path="/pending-offers"
