@@ -20,6 +20,7 @@ import {
 } from "../api/backendService";
 import { useParams } from "react-router";
 import { useAuth0 } from "@auth0/auth0-react";
+import { CircularProgress } from '@mui/material';
 
 export default function OffersPage() {
   const [open, setOpen] = useState(false);
@@ -27,16 +28,33 @@ export default function OffersPage() {
   const handleClose = () => setOpen(false);
   const [offers, setOffers] = useState(null);
   const { getAccessTokenSilently } = useAuth0();
+  const [loading, setLoading] = useState(false);
+  const [offerId, setOfferId] = useState(null);
 
   const params = useParams();
   useEffect(() => {
     const crtOffers = async () => {
+      setLoading(true);
       const offers = await createOffers(params.id);
       setOffers(offers.response.data);
+      setLoading(false);
       //localStorage.setItem("offers", JSON.stringify(offers.response.data));
     };
     crtOffers();
   }, [getAccessTokenSilently, params.id]);
+
+  if (loading) { // Add this block
+    return <Box
+    display="flex"
+    justifyContent="center"
+    alignItems="center"
+    height="100vh"
+  >
+    <CircularProgress color="secondary" />
+  </Box>;
+  }
+
+  
   return (
     <Box
       sx={{ flexGrow: 1 }}
@@ -56,6 +74,10 @@ export default function OffersPage() {
         margin="auto"
       >
         {offers?.map((offer) => {
+          const handlePickOffer = () => {
+            setOfferId(offer.offerId);
+            handleOpen();
+          };
           return (
             <Box
               sx={{
@@ -110,7 +132,7 @@ export default function OffersPage() {
                 </Stack>
 
                 <Button
-                  onClick={handleOpen}
+                  onClick={handlePickOffer}
                   sx={{
                     bgcolor: "secondary.dark",
                     marginX: "15px",
@@ -139,7 +161,8 @@ export default function OffersPage() {
                 <OfferDetails
                   open={open}
                   handleClose={handleClose}
-                  offerId={offer?.id}
+                  offerId={offerId}
+                  
                 />
               </Stack>
             </Box>
@@ -187,7 +210,6 @@ function OfferDetails({ open, handleClose, offerId }) {
     fetchUserInfo(); // Call the function
   }, [getAccessTokenSilently, isAuthenticated]);
   async function handleSubmit() {
-    console.log("submit");
     //event.preventDefault();
     const address = {
       city: city,
@@ -287,7 +309,10 @@ function OfferDetails({ open, handleClose, offerId }) {
             disableElevation
             variant="contained"
             //type="submit"
-            onClick={handleSubmit}
+            onClick={() => {
+              handleSubmit();
+              handleClose();
+            }}
           >
             <Typography fontWeight="bold" color="primary.main">
               Submit

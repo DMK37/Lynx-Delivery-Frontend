@@ -106,7 +106,7 @@ export default function InquiriesTable({ rows }) {
       headerAlign: "center",
       renderCell: (params) => {
         const onClick = () => {
-          console.log(params);
+          // console.log(params);
         };
 
         return (
@@ -143,7 +143,6 @@ function InquiryCell(params) {
 
   const handleClickOpen = async () => {
     setInquiry(params.row);
-    console.log(params.row);
     setDateOfInquiring(new Date(params.row.dateOfInquiring));
     setPickupDate(new Date(params.row.pickupDate));
     setDeliveryDate(new Date(params.row.deliveryDate));

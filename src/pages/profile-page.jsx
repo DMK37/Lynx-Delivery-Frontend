@@ -5,6 +5,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import MyTextField from "../components/my-text-field";
 import { getUserInfo, updateUserInfo } from "../api/backendService";
 import { useEffect, useState } from "react";
+import { CircularProgress } from '@mui/material';
 
 export default function ProfilePage() {
   const { getAccessTokenSilently, user } = useAuth0();
@@ -20,6 +21,7 @@ export default function ProfilePage() {
   const [DFstreet, setDFStreet] = useState("");
   const [DFhouseNumber, setDFHouseNumber] = useState("");
   const [DFapartmentNumber, setDFApartmentNumber] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -70,9 +72,22 @@ export default function ProfilePage() {
           userInfo.response.data.defaultSourceAddress.apartmentNumber
         );
       }
+      setLoading(false);
     };
     setValues();
   }, [getAccessTokenSilently, user.sub]);
+
+  if (loading) { // Add this block
+    return <Box
+    display="flex"
+    justifyContent="center"
+    alignItems="center"
+    height="100vh"
+  >
+    <CircularProgress color="secondary" />
+  </Box>;
+  }
+
 
   return (
     <Box bgcolor="primary.main">

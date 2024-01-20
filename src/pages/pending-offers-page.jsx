@@ -3,11 +3,13 @@ import { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { getPendingOffers } from "../api/backendService";
 import PendingOffersTable from "../components/pending-offers-table";
+import { CircularProgress } from '@mui/material';
 
 export default function PendingOffersPage() {
   const [rows, setRows] = useState([]);
   const [offers, setOffers] = useState([]);
   const { getAccessTokenSilently } = useAuth0();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const Status = {
@@ -29,9 +31,21 @@ export default function PendingOffersPage() {
         });
         setRows(offersCopy);
       }
+      setLoading(false);
     };
     setValues();
   }, [getAccessTokenSilently]);
+
+  if (loading) { // Add this block
+    return <Box
+    display="flex"
+    justifyContent="center"
+    alignItems="center"
+    height="100vh"
+  >
+    <CircularProgress color="secondary" />
+  </Box>;
+  }
 
   return (
     <Box

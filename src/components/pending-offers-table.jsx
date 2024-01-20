@@ -302,7 +302,7 @@ export default function PendingOffersTable({ rows, offers, setOffers }) {
     const token = await getAccessTokenSilently();
     await createOrder(offerId, token);
     const updatedOffers = offers.filter((offer) => offer.id !== offerId);
-    console.log(updatedOffers);
+    // console.log(updatedOffers);
     setOffers(updatedOffers);
   }
 
