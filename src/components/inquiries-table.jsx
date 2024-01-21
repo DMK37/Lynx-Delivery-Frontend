@@ -35,7 +35,8 @@ export default function InquiriesTable({ rows }) {
         ", " +
         params.row.sourceAddress.houseNumber +
         ", " +
-        params.row.sourceAddress.apartmentNumber,
+        params.row.sourceAddress.apartmentNumber
+        
     },
     {
       field: "destinationAddress",
@@ -180,13 +181,15 @@ function InquiryCell(params) {
               Source Address: {inquiry?.sourceAddress?.city},{" "}
               {inquiry?.sourceAddress?.street},{" "}
               {inquiry?.sourceAddress?.houseNumber},{" "}
-              {inquiry?.sourceAddress?.apartmentNumber},
+              {inquiry?.sourceAddress?.apartmentNumber},{" "}
+              {inquiry?.sourceAddress?.postalCode}
             </Typography>
             <Typography margin={1}>
               Destination Address: {inquiry?.destinationAddress?.city},{" "}
               {inquiry?.destinationAddress?.street},{" "}
               {inquiry?.destinationAddress?.houseNumber},{" "}
-              {inquiry?.destinationAddress?.apartmentNumber}
+              {inquiry?.destinationAddress?.apartmentNumber},{" "}
+              {inquiry?.destinationAddress?.postalCode}
             </Typography>
             <Typography margin={1}>
               Date of Inquiring:{" "}

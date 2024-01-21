@@ -12,9 +12,9 @@ import {
   Typography,
 } from "@mui/material";
 import { useState, useEffect } from "react";
-import { getAllOrders, patchOrder } from "../api/backendService";
+import { getUserOrders } from "../api/backendService";
 import { useAuth0 } from "@auth0/auth0-react";
-import MyTextField from "./my-text-field";
+
 
 function OfferCell({ params, orders }) {
   const [open, setOpen] = useState(false);
@@ -109,27 +109,25 @@ function OfferCell({ params, orders }) {
   );
 }
 
-export default function OrdersTable() {
+export default function UserOrdersTable() {
   const { getAccessTokenSilently } = useAuth0();
 
-  const [refresh, setRefresh] = useState(false);
+  
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState("");
-  const [order, setOrder] = useState(null);
+
 
   useEffect(() => {
     const setValues = async () => {
       const token = await getAccessTokenSilently();
-      const orders = await getAllOrders(token);
+      const orders = await getUserOrders(token);
       if (orders.error == null) {
         setRows(orders.response.data);
       }
       setLoading(false);
     };
     setValues();
-  }, [getAccessTokenSilently, refresh]);
+  }, [getAccessTokenSilently]);
 
   const orderStatus = {
     0: "Accepted",
@@ -202,160 +200,12 @@ export default function OrdersTable() {
         );
       },
     },
-    {
-      field: "pickedUp",
-      headerName: "Picked Up",
-      align: "center",
-      headerAlign: "center",
-      sortable: false,
-      width: 200,
-      renderCell: (params) => {
-        if (params.row.orderStatus < 1) {
-          return (
-            <Button
-              sx={{
-                bgcolor: "secondary.main",
-                marginX: "15px",
-                paddingX: "15px",
-                ":hover": { bgcolor: "secondary.dark" },
-              }}
-              disableElevation
-              onClick={async () => {
-                const token = await getAccessTokenSilently();
-                patchOrder(params.row.id, 1, null, "courier 1", token);
-                setRefresh(!refresh);
-                setLoading(true);
-              }}
-            >
-              <Typography>Picked Up</Typography>
-            </Button>
-          );
-        }
-      },
-    },
-    {
-      field: "cannotDeliver",
-      headerName: "Cannot Deliver",
-      align: "center",
-      headerAlign: "center",
-      sortable: false,
-      width: 220,
-      renderCell: (params) => {
-        if (params.row.orderStatus < 2) {
-          return (
-            <Button
-              sx={{
-                bgcolor: "secondary.main",
-                marginX: "15px",
-                paddingX: "15px",
-                ":hover": { bgcolor: "secondary.dark" },
-              }}
-              disableElevation
-              onClick={() => {
-                setOrder(params.row);
-                setOpen(true);
-              }}
-            >
-              <Typography>Cannot Deliver</Typography>
-            </Button>
-          );
-        }
-      },
-    },
-    {
-      field: "delivered",
-      headerName: "Delivered",
-      align: "center",
-      headerAlign: "center",
-      sortable: false,
-      width: 200,
-      renderCell: (params) => {
-        if (params.row.orderStatus < 2) {
-          return (
-            <Button
-              sx={{
-                bgcolor: "secondary.main",
-                marginX: "15px",
-                paddingX: "15px",
-                ":hover": { bgcolor: "secondary.dark" },
-              }}
-              disableElevation
-              onClick={async () => {
-                const token = await getAccessTokenSilently();
-                await patchOrder(params.row.id, 3, null, "courier 1", token);
-                setRefresh(!refresh);
-                setLoading(true);
-              }}
-            >
-              <Typography>Delivered</Typography>
-            </Button>
-          );
-        }
-      },
-    },
+    
   ];
 
   return (
     <Box margin={5}>
       <DataGrid rows={rows} columns={columns} sx={{ borderRadius: 5 }} />
-      <Dialog
-        open={open}
-        onClose={() => {
-          setOpen(false);
-          setMessage("");
-          setOrder(null);
-        }}
-      >
-        <DialogTitle>Cannot Deliver</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            <MyTextField
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              type="text"
-              label="Message"
-              isRequired={true}
-            ></MyTextField>
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            color="secondary"
-            sx={{
-              //width: 250,
-              marginY: 3,
-              paddingX: 4,
-              ":hover": { backgroundColor: "third.pinktext" },
-              textTransform: "none",
-            }}
-            disableElevation
-            variant="contained"
-            onClick={async () => {
-              const token = await getAccessTokenSilently();
-              patchOrder(order.id, 2, message, "courier 1", token);
-              setRefresh(!refresh);
-              setLoading(true);
-              setOpen(false);
-              setMessage("");
-              setOrder(null);
-            }}
-          >
-            <Typography fontWeight="bold" color="primary.main">
-              Submit
-            </Typography>
-          </Button>
-          <Button
-            color="secondary"
-            onClick={() => {
-              setOpen(false);
-              setMessage("");
-              setOrder(null);
-            }}
-          >
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
     </Box>
   );
 }

@@ -22,9 +22,9 @@ function InquiryCell(params) {
 
   const handleClickOpen = async () => {
     setInquiry(params.row.inquiry);
-    setDateOfInquiring(new Date(params.row.inquiry.dateOfInquiring));
-    setPickupDate(new Date(params.row.inquiry.pickupDate));
-    setDeliveryDate(new Date(params.row.inquiry.deliveryDate));
+    setDateOfInquiring(new Date(params.row?.inquiry?.dateOfInquiring));
+    setPickupDate(new Date(params.row?.inquiry?.pickupDate));
+    setDeliveryDate(new Date(params.row?.inquiry?.deliveryDate));
     setOpen(true);
   };
 
@@ -34,6 +34,7 @@ function InquiryCell(params) {
   const status = {
     0: "Created",
     1: "Accepted",
+    2: "Offers Requested"
   };
 
   return (
@@ -153,7 +154,7 @@ function OfferCell({ params, offers }) {
   const [expireDate, setExpireDate] = useState(null);
   const [updateDate, setUpdateDate] = useState(null);
   const handleClickOpen = async () => {
-    const off = offers.find((offer) => offer.id === params.row.id);
+    const off = offers.find((offer) => offer.offerId === params.row.offerId);
     setCreationDate(new Date(off.creationDate));
     setExpireDate(new Date(off.expireDate));
     setUpdateDate(new Date(off.updateDate));
@@ -183,7 +184,7 @@ function OfferCell({ params, offers }) {
         <DialogTitle>Details</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            <Typography margin={1}>Offer Id: {offer?.id}</Typography>
+            <Typography margin={1}>Offer Id: {offer?.offerId}</Typography>
             <Typography margin={1}>
               Creation Date:{" "}
               {creationDate?.getFullYear().toString().padStart(2, "0")}/
@@ -240,7 +241,7 @@ function OfferCell({ params, offers }) {
 export default function OffersTable({ rows, offers }) {
   const columns = [
     {
-      field: "id",
+      field: "offerId",
       headerName: "Id",
       //width: 150,
       align: "center",
@@ -284,7 +285,7 @@ export default function OffersTable({ rows, offers }) {
 
   return (
     <Box margin={5}>
-      <DataGrid rows={rows} columns={columns} sx={{ borderRadius: 5 }} />
+      <DataGrid rows={rows} columns={columns} sx={{ borderRadius: 5 }}  getRowId={(row) => row.offerId}/>
     </Box>
   );
 }

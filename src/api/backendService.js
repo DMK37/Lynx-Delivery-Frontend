@@ -98,8 +98,11 @@ export const postSelectedOffer = async (offerId, customerInfo, accessToken) => {
     const response = await apiClient.post(
       `offers/${offerId}/select`,
       {
-        offerId: offerId,
-        customerInfo: customerInfo,
+        firstName: customerInfo.firstName,
+        lastName: customerInfo.lastName,
+        address: customerInfo.address,
+        email: customerInfo.email,
+        companyName: customerInfo.companyName,
       },
       {
         headers: {
@@ -228,10 +231,7 @@ export const getUserInfo = async (accessToken) => {
 export const createOffers = async (inquiryId) => {
   try {
     const response = await apiClient.post(
-      `offers/getAll`,
-      {
-        inquiryID: inquiryId,
-      },
+      `inquiries/${inquiryId}/offers`,
       {
         headers: {
           "content-type": "application/json",
@@ -281,6 +281,62 @@ export const patchOrder = async (orderId, orderStatus, comment, courierName, acc
         },
       }
     );
+    return {
+      response,
+      error: null,
+    };
+  } catch (error) {
+    return handleError(error);
+  }
+}
+
+export const rejectOffer = async (offerId, accessToken, reason) => {
+  try {
+    const response = await apiClient.post(
+      `offers/${offerId}/reject`,
+      
+        reason
+      ,
+      {
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return {
+      response,
+      error: null,
+    };
+  } catch (error) {
+    return handleError(error);
+  }
+}
+
+export const getUserOrders = async (accessToken) => {
+  try {
+    const response = await apiClient.get(`client/orders`, {
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return {
+      response,
+      error: null,
+    };
+  } catch (error) {
+    return handleError(error);
+  }
+};
+
+export const getOrderById = async (orderId) => {
+  try {
+    const response = await apiClient.get(`orders/${orderId}`, {
+      headers: {
+        "content-type": "application/json",
+      },
+    });
     return {
       response,
       error: null,

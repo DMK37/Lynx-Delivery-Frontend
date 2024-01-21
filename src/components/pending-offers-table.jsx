@@ -10,11 +10,17 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  TextField,
   Typography,
 } from "@mui/material";
 import { useState, useEffect } from "react";
-import { createOrder, getPendingOffers } from "../api/backendService";
+import {
+  createOrder,
+  getPendingOffers,
+  rejectOffer,
+} from "../api/backendService";
 import { useAuth0 } from "@auth0/auth0-react";
+import MyTextField from "./my-text-field";
 
 function InquiryCell(params) {
   const [open, setOpen] = useState(false);
@@ -37,6 +43,7 @@ function InquiryCell(params) {
   const status = {
     0: "Created",
     1: "Accepted",
+    2: "Offers Requested",
   };
 
   return (
@@ -155,7 +162,7 @@ function OfferCell({ params, offers }) {
   const [expireDate, setExpireDate] = useState(null);
   const [updateDate, setUpdateDate] = useState(null);
   const handleClickOpen = async () => {
-    const off = offers.find((offer) => offer.id === params.row.id);
+    const off = offers.find((offer) => offer.offerId === params.row.offerId);
     setCreationDate(new Date(off.creationDate));
     setExpireDate(new Date(off.expireDate));
     setUpdateDate(new Date(off.updateDate));
@@ -185,7 +192,7 @@ function OfferCell({ params, offers }) {
         <DialogTitle>Details</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            <Typography margin={1}>Offer Id: {offer?.id}</Typography>
+            <Typography margin={1}>Offer Id: {offer?.offerId}</Typography>
             <Typography margin={1}>
               Creation Date:{" "}
               {creationDate?.getFullYear().toString().padStart(2, "0")}/
@@ -245,6 +252,12 @@ export default function PendingOffersTable() {
   const [refresh, setRefresh] = useState(false);
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [offer, setOffer] = useState(null);
+  const [agreement, setAgreement] = useState("");
+  const [receipt, setReceipt] = useState("");
+  const [rejectOpen, rejectSetOpen] = useState(false);
+  const [rejectReason, setRejectReason] = useState("");
 
   useEffect(() => {
     const setValues = async () => {
@@ -273,7 +286,7 @@ export default function PendingOffersTable() {
 
   const columns = [
     {
-      field: "id",
+      field: "offerId",
       headerName: "Id",
       //width: 150,
       align: "center",
@@ -323,9 +336,39 @@ export default function PendingOffersTable() {
             ":hover": { bgcolor: "secondary.dark" },
           }}
           disableElevation
-          onClick={() => handleAccept(params.row.id)}
+          onClick={() => {
+            setOpen(true);
+            setOffer(params.row);
+            //handleAccept(params.row.id);
+          }}
         >
           <Typography>Accept</Typography>
+        </Button>
+      ),
+    },
+    {
+      field: "reject",
+      headerName: "Reject",
+      sortable: false,
+      width: 150,
+      align: "center",
+      headerAlign: "center",
+      disableClickEventBubbling: true,
+      renderCell: (params) => (
+        <Button
+          sx={{
+            bgcolor: "secondary.main",
+            marginX: "15px",
+            paddingX: "15px",
+            ":hover": { bgcolor: "secondary.dark" },
+          }}
+          disableElevation
+          onClick={() => {
+            rejectSetOpen(true);
+            setOffer(params.row);
+          }}
+        >
+          <Typography>Reject</Typography>
         </Button>
       ),
     },
@@ -333,16 +376,150 @@ export default function PendingOffersTable() {
   async function handleAccept(offerId) {
     const token = await getAccessTokenSilently();
     await createOrder(offerId, token);
-    const updatedOffers = rows.filter((offer) => offer.id !== offerId);
+    //const updatedOffers = rows.filter((offer) => offer.offerId !== offerId);
     // console.log(updatedOffers);
-    setRows(updatedOffers);
+    //setRows(updatedOffers);
     setRefresh(!refresh);
     setLoading(true);
   }
 
+  async function handleReject(offerId) {
+    const token = await getAccessTokenSilently();
+    await rejectOffer(offerId, token, rejectReason);
+    //await createOrder(offerId, token);
+    //const updatedOffers = rows.filter((offer) => offer.offerId !== offerId);
+    //setRows(updatedOffers);
+    setRefresh(!refresh);
+    setLoading(true);
+  }
+
+  const handleAgreementChange = (event) => {
+    const file = event.target.files[0];
+    setAgreement(file.name);
+    // Handle the agreement file here
+  };
+
+  const handleReceiptChange = (event) => {
+    const file = event.target.files[0];
+    setReceipt(file.name);
+    // Handle the receipt file here
+  };
+
   return (
     <Box margin={5}>
-      <DataGrid rows={rows} columns={columns} sx={{ borderRadius: 5 }} />
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        sx={{ borderRadius: 5 }}
+        getRowId={(row) => row.offerId}
+      />
+      <Dialog
+        open={open}
+        onClose={() => {
+          setOpen(false);
+          setOffer(null);
+        }}
+      >
+        <DialogTitle>Accept Offer</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            <Box flexDirection="column" marginBottom={2}>
+              <input
+                accept="image/*"
+                style={{ display: "none" }}
+                id="agreement-file"
+                type="file"
+                onChange={handleAgreementChange}
+              />
+              <label htmlFor="agreement-file">
+                <Button variant="contained" color="primary" component="span">
+                  Upload Agreement
+                </Button>
+              </label>
+              {agreement && <p>Selected agreement: {agreement}</p>}
+            </Box>
+
+            <Box flexDirection="column" marginBottom={2}>
+              <input
+                accept="image/*"
+                style={{ display: "none" }}
+                id="receipt-file"
+                type="file"
+                onChange={handleReceiptChange}
+              />
+              <label htmlFor="receipt-file">
+                <Button variant="contained" color="primary" component="span">
+                  Upload Receipt
+                </Button>
+              </label>
+              {receipt && <p>Selected receipt: {receipt}</p>}
+            </Box>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            color="secondary"
+            onClick={() => {
+              setOpen(false);
+              setOffer(null);
+            }}
+          >
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={rejectOpen}
+        onClose={() => {
+          rejectSetOpen(false);
+          setOffer(null);
+          setRejectReason("");
+        }}
+      >
+        <DialogTitle>Reject Reason</DialogTitle>
+        <DialogContent>
+          <MyTextField
+            autoFocus
+            margin="dense"
+            id="reason"
+            label="Reason"
+            type="text"
+            fullWidth
+            value={rejectReason}
+            onChange={(event) => setRejectReason(event.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={async () => {
+              // Handle the reject here
+              await handleReject(offer.offerId);
+              rejectSetOpen(false);
+              setOffer(null);
+              setRejectReason("");
+            }}
+            sx={{
+              bgcolor: "secondary.main",
+              marginX: "15px",
+              paddingX: "15px",
+              ":hover": { bgcolor: "secondary.dark" },
+            }}
+            disableElevation
+          >
+            Reject
+          </Button>
+          <Button
+            onClick={() => {
+              rejectSetOpen(false);
+              setOffer(null);
+              setRejectReason("");
+            }}
+            color="secondary"
+          >
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

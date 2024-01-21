@@ -75,7 +75,7 @@ export default function OffersPage() {
       >
         {offers?.map((offer) => {
           const handlePickOffer = () => {
-            setOfferId(offer.offerId);
+            setOfferId(offer.id);
             handleOpen();
           };
           return (

@@ -17,6 +17,8 @@ import AllInquiriesPage from "./pages/all-inquiries-page";
 import AllOffersPage from "./pages/all-offers-page";
 import PendingOffersPage from "./pages/pending-offers-page";
 import AllOrdersPage from "./pages/all-orders-page";
+import UserOrdersPage from "./pages/user-orders-page";
+import OrderPage from "./pages/order-page";
 
 const theme = createTheme({
   palette: {
@@ -71,6 +73,8 @@ export default function CourierApp() {
             <Route path="/create-inquiry" element={<CreateInquiryPage />} />
             <Route
              path="/:id/offers" element={<OffersPage />} />
+             <Route
+             path="/orders/:id" element={<OrderPage />} />
             <Route
               path="/profile"
               element={<AuthenticationGuard component={ProfilePage} />}
@@ -78,6 +82,10 @@ export default function CourierApp() {
             <Route
               path="/inquiries"
               element={<AuthenticationGuard component={UserInquiriesPage} />}
+            />
+            <Route
+              path="/orders"
+              element={<AuthenticationGuard component={UserOrdersPage} />}
             />
             <Route
               path="/all-inquiries"
