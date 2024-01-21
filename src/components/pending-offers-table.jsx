@@ -10,7 +10,6 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  TextField,
   Typography,
 } from "@mui/material";
 import { useState, useEffect } from "react";
@@ -373,15 +372,15 @@ export default function PendingOffersTable() {
       ),
     },
   ];
-  async function handleAccept(offerId) {
-    const token = await getAccessTokenSilently();
-    await createOrder(offerId, token);
-    //const updatedOffers = rows.filter((offer) => offer.offerId !== offerId);
-    // console.log(updatedOffers);
-    //setRows(updatedOffers);
-    setRefresh(!refresh);
-    setLoading(true);
-  }
+  // async function handleAccept(offerId) {
+  //   const token = await getAccessTokenSilently();
+  //   await createOrder(offerId, token);
+  //   //const updatedOffers = rows.filter((offer) => offer.offerId !== offerId);
+  //   // console.log(updatedOffers);
+  //   //setRows(updatedOffers);
+  //   setRefresh(!refresh);
+  //   setLoading(true);
+  // }
 
   async function handleReject(offerId) {
     const token = await getAccessTokenSilently();
