@@ -14,7 +14,6 @@ import {
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import {
-  createOrder,
   getPendingOffers,
   rejectOffer,
 } from "../api/backendService";
@@ -385,9 +384,6 @@ export default function PendingOffersTable() {
   async function handleReject(offerId) {
     const token = await getAccessTokenSilently();
     await rejectOffer(offerId, token, rejectReason);
-    //await createOrder(offerId, token);
-    //const updatedOffers = rows.filter((offer) => offer.offerId !== offerId);
-    //setRows(updatedOffers);
     setRefresh(!refresh);
     setLoading(true);
   }
