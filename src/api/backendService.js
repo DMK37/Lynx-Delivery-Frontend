@@ -120,16 +120,14 @@ export const postSelectedOffer = async (offerId, customerInfo, accessToken) => {
   }
 };
 
-export const createOrder = async (offerId, accessToken) => {
+export const acceptOffer = async (offerId, accessToken, formData) => {
   try {
     const response = await apiClient.post(
-      `orders`,
-      {
-        offerId: offerId,
-      },
+      `offers/${offerId}/accept`,
+      formData,
       {
         headers: {
-          "content-type": "application/json",
+          'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${accessToken}`,
         },
       }

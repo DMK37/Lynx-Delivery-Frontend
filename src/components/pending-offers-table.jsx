@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import {
+  acceptOffer,
   getPendingOffers,
   rejectOffer,
 } from "../api/backendService";
@@ -371,32 +372,42 @@ export default function PendingOffersTable() {
       ),
     },
   ];
-  // async function handleAccept(offerId) {
-  //   const token = await getAccessTokenSilently();
-  //   await createOrder(offerId, token);
-  //   //const updatedOffers = rows.filter((offer) => offer.offerId !== offerId);
-  //   // console.log(updatedOffers);
-  //   //setRows(updatedOffers);
-  //   setRefresh(!refresh);
-  //   setLoading(true);
-  // }
+  async function handleAccept(offerId) {
+    if (!agreement || !receipt) {
+      return;
+    }
+  
+    const formData = new FormData();
+    formData.append('agreement', agreement);
+    formData.append('receipt', receipt);
+
+    const token = await getAccessTokenSilently();
+    await acceptOffer(offerId, token, formData);
+    //const updatedOffers = rows.filter((offer) => offer.offerId !== offerId);
+    // console.log(updatedOffers);
+    //setRows(updatedOffers);
+    setOpen(false);
+    setRefresh(!refresh);
+    setLoading(true);
+  }
 
   async function handleReject(offerId) {
     const token = await getAccessTokenSilently();
     await rejectOffer(offerId, token, rejectReason);
     setRefresh(!refresh);
+    rejectSetOpen(false);
     setLoading(true);
   }
 
   const handleAgreementChange = (event) => {
     const file = event.target.files[0];
-    setAgreement(file.name);
+    setAgreement(file);
     // Handle the agreement file here
   };
 
   const handleReceiptChange = (event) => {
     const file = event.target.files[0];
-    setReceipt(file.name);
+    setReceipt(file);
     // Handle the receipt file here
   };
 
@@ -431,7 +442,7 @@ export default function PendingOffersTable() {
                   Upload Agreement
                 </Button>
               </label>
-              {agreement && <p>Selected agreement: {agreement}</p>}
+              {agreement && <p>Selected agreement: {agreement.name}</p>}
             </Box>
 
             <Box flexDirection="column" marginBottom={2}>
@@ -447,11 +458,24 @@ export default function PendingOffersTable() {
                   Upload Receipt
                 </Button>
               </label>
-              {receipt && <p>Selected receipt: {receipt}</p>}
+              {receipt && <p>Selected receipt: {receipt.name}</p>}
             </Box>
           </DialogContentText>
         </DialogContent>
         <DialogActions>
+          <Button
+          sx={{
+            bgcolor: "secondary.main",
+            marginX: "15px",
+            paddingX: "15px",
+            ":hover": { bgcolor: "secondary.dark" },
+          }}
+          disableElevation
+          onClick={async () => {
+            await handleAccept(offer.offerId);
+          }}>
+            Accept
+          </Button>
           <Button
             color="secondary"
             onClick={() => {
