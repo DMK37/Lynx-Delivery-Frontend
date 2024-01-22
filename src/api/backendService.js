@@ -343,3 +343,20 @@ export const getOrderById = async (orderId) => {
     return handleError(error);
   }
 }
+
+export const addInquiry = async (id, accessToken) => {
+  try {
+    const response = await apiClient.post(`inquiries/${id}/add`,{}, {
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return {
+      response,
+      error: null,
+    }
+  } catch (error) {
+    return handleError(error);
+  }
+}

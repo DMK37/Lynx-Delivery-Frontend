@@ -9,7 +9,12 @@ export default function OrderPage() {
   const [loading, setLoading] = useState(false);
   const [lastUpdate, setLastUpdate] = useState(null);
 
-  
+  const orderStatus = {
+    0: "Accepted",
+    1: "Picked Up",
+    2: "Cannot Deliver",
+    3: "Delivered",
+  };
 
   useEffect(() => {
     const setValues = async () => {
@@ -51,7 +56,8 @@ export default function OrderPage() {
           Order
         </Typography>
         <Typography variant="h5" marginBottom={1}>Order Id: {order?.id}</Typography>
-        <Typography variant="h5" marginBottom={1}>Order Status: {order?.orderStatus}</Typography>
+        <Typography variant="h5" marginBottom={1}>Order Status: {orderStatus[order?.orderStatus]}</Typography>
+        {order?.comment && <Typography variant="h5" marginBottom={1}>Order Comment: {order?.comment}</Typography>}
         <Typography marginBottom={1} variant="h5">
           Last Update: {" "}
           {lastUpdate?.getFullYear().toString().padStart(2, "0")}/
@@ -59,6 +65,9 @@ export default function OrderPage() {
           {lastUpdate?.getDate().toString().padStart(2, "0")}{" "}
           {lastUpdate?.getHours().toString().padStart(2, "0")}:
           {lastUpdate?.getMinutes().toString().padStart(2, "0")}
+        </Typography>
+        <Typography marginBottom={1} variant="h5">
+          Courier Name: {order?.courierName}
         </Typography>
       </Box>
     </Box>

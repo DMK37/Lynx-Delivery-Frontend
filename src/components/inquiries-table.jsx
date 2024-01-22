@@ -97,35 +97,6 @@ export default function InquiriesTable({ rows }) {
       headerAlign: "center",
       renderCell: (params) => <InquiryCell {...params} />,
     },
-    {
-      field: "orderDetails",
-      headerName: "Order Details",
-      sortable: false,
-      width: 250,
-      align: "center",
-      disableClickEventBubbling: true,
-      headerAlign: "center",
-      renderCell: (params) => {
-        const onClick = () => {
-          // console.log(params);
-        };
-
-        return (
-          <Button
-            sx={{
-              bgcolor: "secondary.main",
-              marginX: "15px",
-              paddingX: "15px",
-              ":hover": { bgcolor: "secondary.dark" },
-            }}
-            disableElevation
-            onClick={onClick}
-          >
-            <Typography>Order Details</Typography>
-          </Button>
-        );
-      },
-    },
   ];
 
   return (
@@ -156,6 +127,7 @@ function InquiryCell(params) {
   const status = {
     0: "Created",
     1: "Accepted",
+    2: "Offers Requested"
   };
 
   return (
